@@ -4308,3 +4308,140 @@
 2026-03-12 20:15:13,212 - snapshot_service - INFO - Connected to CARLA:
 2026-03-12 20:15:13,212 - snapshot_service - INFO -   Map: Town10HD_Opt
 2026-03-12 20:15:13,212 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:38:15,674 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:38:15,674 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:38:45,679 - snapshot_service - ERROR - Failed to connect to CARLA: time-out of 30000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-12 20:38:45,680 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:38:46,400 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:38:46,400 - snapshot_service - INFO -   Map: Town10HD_Opt
+2026-03-12 20:38:46,400 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:39:59,501 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:40:24,137 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:40:24,137 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:40:54,142 - snapshot_service - ERROR - Failed to connect to CARLA: time-out of 30000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-12 20:40:54,142 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:40:54,827 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:40:54,827 - snapshot_service - INFO -   Map: Town10HD_Opt
+2026-03-12 20:40:54,827 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:41:10,396 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:41:57,749 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:41:57,749 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:42:27,754 - snapshot_service - ERROR - Failed to connect to CARLA: time-out of 30000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-12 20:42:27,755 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:42:28,519 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:42:28,519 - snapshot_service - INFO -   Map: Town10HD_Opt
+2026-03-12 20:42:28,519 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:47:19,963 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:47:46,482 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:47:46,482 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:48:16,488 - snapshot_service - ERROR - Failed to connect to CARLA: time-out of 30000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-12 20:48:16,489 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:48:24,116 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:48:24,116 - snapshot_service - INFO -   Map: Town03
+2026-03-12 20:48:24,116 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:48:24,166 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:48:25,821 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:48:25,822 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:48:26,590 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:48:26,590 - snapshot_service - INFO -   Map: Town03
+2026-03-12 20:48:26,591 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:48:27,269 - snapshot_service - INFO - Attached sensors to vehicle 123
+2026-03-12 20:48:27,462 - snapshot_service - INFO - Attached sensors to vehicle 122
+2026-03-12 20:48:27,652 - snapshot_service - INFO - Attached sensors to vehicle 121
+2026-03-12 20:48:27,837 - snapshot_service - INFO - Attached sensors to vehicle 120
+2026-03-12 20:48:28,023 - snapshot_service - INFO - Attached sensors to vehicle 119
+2026-03-12 20:48:28,206 - snapshot_service - INFO - Attached sensors to vehicle 118
+2026-03-12 20:48:28,389 - snapshot_service - INFO - Attached sensors to vehicle 117
+2026-03-12 20:48:28,567 - snapshot_service - INFO - Attached sensors to vehicle 116
+2026-03-12 20:48:28,741 - snapshot_service - INFO - Attached sensors to vehicle 115
+2026-03-12 20:48:28,925 - snapshot_service - INFO - Attached sensors to vehicle 114
+2026-03-12 20:48:29,100 - snapshot_service - INFO - Attached sensors to vehicle 113
+2026-03-12 20:48:29,274 - snapshot_service - INFO - Attached sensors to vehicle 112
+2026-03-12 20:48:29,463 - snapshot_service - INFO - Attached sensors to vehicle 111
+2026-03-12 20:48:29,656 - snapshot_service - INFO - Attached sensors to vehicle 110
+2026-03-12 20:48:29,829 - snapshot_service - INFO - Attached sensors to vehicle 109
+2026-03-12 20:48:29,868 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:48:33,020 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:48:33,020 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:48:33,730 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:48:33,730 - snapshot_service - INFO -   Map: Town03
+2026-03-12 20:48:33,730 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:48:34,420 - snapshot_service - INFO - Attached sensors to vehicle 123
+2026-03-12 20:48:34,639 - snapshot_service - INFO - Attached sensors to vehicle 122
+2026-03-12 20:48:34,827 - snapshot_service - INFO - Attached sensors to vehicle 121
+2026-03-12 20:48:35,024 - snapshot_service - INFO - Attached sensors to vehicle 120
+2026-03-12 20:48:35,214 - snapshot_service - INFO - Attached sensors to vehicle 119
+2026-03-12 20:48:35,389 - snapshot_service - INFO - Attached sensors to vehicle 118
+2026-03-12 20:48:35,570 - snapshot_service - INFO - Attached sensors to vehicle 117
+2026-03-12 20:48:35,749 - snapshot_service - INFO - Attached sensors to vehicle 116
+2026-03-12 20:48:35,933 - snapshot_service - INFO - Attached sensors to vehicle 115
+2026-03-12 20:48:36,121 - snapshot_service - INFO - Attached sensors to vehicle 114
+2026-03-12 20:48:36,303 - snapshot_service - INFO - Attached sensors to vehicle 113
+2026-03-12 20:48:36,492 - snapshot_service - INFO - Attached sensors to vehicle 112
+2026-03-12 20:48:36,682 - snapshot_service - INFO - Attached sensors to vehicle 111
+2026-03-12 20:48:36,859 - snapshot_service - INFO - Attached sensors to vehicle 110
+2026-03-12 20:48:37,083 - snapshot_service - INFO - Attached sensors to vehicle 109
+2026-03-12 20:48:37,105 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:48:40,482 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:48:40,482 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:48:41,289 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:48:41,289 - snapshot_service - INFO -   Map: Town03
+2026-03-12 20:48:41,289 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:48:41,959 - snapshot_service - INFO - Attached sensors to vehicle 123
+2026-03-12 20:48:42,150 - snapshot_service - INFO - Attached sensors to vehicle 122
+2026-03-12 20:48:42,341 - snapshot_service - INFO - Attached sensors to vehicle 121
+2026-03-12 20:48:42,545 - snapshot_service - INFO - Attached sensors to vehicle 120
+2026-03-12 20:48:42,741 - snapshot_service - INFO - Attached sensors to vehicle 119
+2026-03-12 20:48:42,934 - snapshot_service - INFO - Attached sensors to vehicle 118
+2026-03-12 20:48:43,121 - snapshot_service - INFO - Attached sensors to vehicle 117
+2026-03-12 20:48:43,309 - snapshot_service - INFO - Attached sensors to vehicle 116
+2026-03-12 20:48:43,496 - snapshot_service - INFO - Attached sensors to vehicle 115
+2026-03-12 20:48:43,683 - snapshot_service - INFO - Attached sensors to vehicle 114
+2026-03-12 20:48:43,869 - snapshot_service - INFO - Attached sensors to vehicle 113
+2026-03-12 20:48:44,048 - snapshot_service - INFO - Attached sensors to vehicle 112
+2026-03-12 20:48:44,222 - snapshot_service - INFO - Attached sensors to vehicle 111
+2026-03-12 20:48:44,391 - snapshot_service - INFO - Attached sensors to vehicle 110
+2026-03-12 20:48:44,565 - snapshot_service - INFO - Attached sensors to vehicle 109
+2026-03-12 20:48:44,581 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:48:48,259 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:48:48,259 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:48:48,989 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:48:48,989 - snapshot_service - INFO -   Map: Town03
+2026-03-12 20:48:48,990 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:48:49,663 - snapshot_service - INFO - Attached sensors to vehicle 123
+2026-03-12 20:48:49,828 - snapshot_service - INFO - Attached sensors to vehicle 122
+2026-03-12 20:48:50,007 - snapshot_service - INFO - Attached sensors to vehicle 121
+2026-03-12 20:48:50,178 - snapshot_service - INFO - Attached sensors to vehicle 120
+2026-03-12 20:48:50,337 - snapshot_service - INFO - Attached sensors to vehicle 119
+2026-03-12 20:48:50,521 - snapshot_service - INFO - Attached sensors to vehicle 118
+2026-03-12 20:48:50,697 - snapshot_service - INFO - Attached sensors to vehicle 117
+2026-03-12 20:48:50,884 - snapshot_service - INFO - Attached sensors to vehicle 116
+2026-03-12 20:48:51,060 - snapshot_service - INFO - Attached sensors to vehicle 115
+2026-03-12 20:48:51,226 - snapshot_service - INFO - Attached sensors to vehicle 114
+2026-03-12 20:48:51,392 - snapshot_service - INFO - Attached sensors to vehicle 113
+2026-03-12 20:48:51,574 - snapshot_service - INFO - Attached sensors to vehicle 112
+2026-03-12 20:48:51,745 - snapshot_service - INFO - Attached sensors to vehicle 111
+2026-03-12 20:48:51,916 - snapshot_service - INFO - Attached sensors to vehicle 110
+2026-03-12 20:48:52,090 - snapshot_service - INFO - Attached sensors to vehicle 109
+2026-03-12 20:48:52,111 - snapshot_service - INFO - Snapshot service shutting down
+2026-03-12 20:48:56,579 - snapshot_service - INFO - Snapshot service starting, CARLA target: localhost:2000
+2026-03-12 20:48:56,579 - snapshot_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:48:57,283 - snapshot_service - INFO - Connected to CARLA:
+2026-03-12 20:48:57,283 - snapshot_service - INFO -   Map: Town03
+2026-03-12 20:48:57,283 - snapshot_service - INFO -   Synchronous mode: False
+2026-03-12 20:48:57,959 - snapshot_service - INFO - Attached sensors to vehicle 123
+2026-03-12 20:48:58,125 - snapshot_service - INFO - Attached sensors to vehicle 122
+2026-03-12 20:48:58,305 - snapshot_service - INFO - Attached sensors to vehicle 121
+2026-03-12 20:48:58,486 - snapshot_service - INFO - Attached sensors to vehicle 120
+2026-03-12 20:48:58,666 - snapshot_service - INFO - Attached sensors to vehicle 119
+2026-03-12 20:48:58,843 - snapshot_service - INFO - Attached sensors to vehicle 118
+2026-03-12 20:48:59,022 - snapshot_service - INFO - Attached sensors to vehicle 117
+2026-03-12 20:48:59,198 - snapshot_service - INFO - Attached sensors to vehicle 116
+2026-03-12 20:48:59,373 - snapshot_service - INFO - Attached sensors to vehicle 115
+2026-03-12 20:48:59,546 - snapshot_service - INFO - Attached sensors to vehicle 114
+2026-03-12 20:48:59,722 - snapshot_service - INFO - Attached sensors to vehicle 113
+2026-03-12 20:48:59,884 - snapshot_service - INFO - Attached sensors to vehicle 112
+2026-03-12 20:49:00,045 - snapshot_service - INFO - Attached sensors to vehicle 111
+2026-03-12 20:49:00,202 - snapshot_service - INFO - Attached sensors to vehicle 110
+2026-03-12 20:49:00,375 - snapshot_service - INFO - Attached sensors to vehicle 109
+2026-03-12 20:49:00,390 - snapshot_service - INFO - Snapshot service shutting down

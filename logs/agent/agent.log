@@ -8071,3 +8071,81 @@
 2026-03-12 20:14:46,336 - agent_service - INFO - CARLA Configuration Agent Service started
 2026-03-12 20:14:46,337 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
 2026-03-12 20:14:46,337 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-12 20:38:19,091 - agent_service - INFO - Model initialized: gemini-2.5-flash
+2026-03-12 20:38:19,091 - agent_service - INFO - Model initialized: claude-sonnet-4
+2026-03-12 20:38:19,651 - agent_service - INFO - Model initialized: gpt-4.1-mini
+2026-03-12 20:38:19,700 - agent_service - INFO - Model initialized: deepseek-v3
+2026-03-12 20:38:19,709 - agent_service - INFO - CARLA Configuration Agent Service started
+2026-03-12 20:38:19,709 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
+2026-03-12 20:38:19,710 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-12 20:39:59,764 - agent_service - INFO - CARLA Configuration Agent Service shutting down
+2026-03-12 20:40:27,605 - agent_service - INFO - Model initialized: gemini-2.5-flash
+2026-03-12 20:40:27,606 - agent_service - INFO - Model initialized: claude-sonnet-4
+2026-03-12 20:40:28,168 - agent_service - INFO - Model initialized: gpt-4.1-mini
+2026-03-12 20:40:28,219 - agent_service - INFO - Model initialized: deepseek-v3
+2026-03-12 20:40:28,229 - agent_service - INFO - CARLA Configuration Agent Service started
+2026-03-12 20:40:28,229 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
+2026-03-12 20:40:28,229 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-12 20:41:10,767 - agent_service - INFO - CARLA Configuration Agent Service shutting down
+2026-03-12 20:42:01,187 - agent_service - INFO - Model initialized: gemini-2.5-flash
+2026-03-12 20:42:01,188 - agent_service - INFO - Model initialized: claude-sonnet-4
+2026-03-12 20:42:01,750 - agent_service - INFO - Model initialized: gpt-4.1-mini
+2026-03-12 20:42:01,799 - agent_service - INFO - Model initialized: deepseek-v3
+2026-03-12 20:42:01,808 - agent_service - INFO - CARLA Configuration Agent Service started
+2026-03-12 20:42:01,809 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
+2026-03-12 20:42:01,809 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-12 20:42:41,050 - agent_service - INFO - REQ  OPTIONS /generate_config client=12.11.109.231
+2026-03-12 20:42:41,051 - agent_service - INFO - RESP OPTIONS /generate_config status=200 latency=1.1ms
+2026-03-12 20:42:41,178 - agent_service - INFO - REQ  POST /generate_config client=12.11.109.231 body={"prompt": "i want light traffic in the evening", "simulator": "carla"}
+2026-03-12 20:42:41,187 - agent_service - INFO - Processing request from user 89ec7f9b-fef7-4c2a-b745-1401377df4a4: i want light traffic in the evening
+2026-03-12 20:42:41,941 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 20:42:42,882 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 20:42:42,923 - agent_service - INFO - [gpt-4.1-mini] latency=1731.9ms tokens={'input_tokens': 412, 'output_tokens': 51, 'total_tokens': 463} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 80, "number_of_vehicles": 10, "number_of_pedestrians": 5}
+2026-03-12 20:42:43,425 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-12 20:42:43,501 - agent_service - INFO - [claude-sonnet-4] latency=2311.2ms tokens={'input_tokens': 484, 'output_tokens': 64, 'total_tokens': 548} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-12 20:42:44,348 - agent_service - INFO - [deepseek-v3] latency=3155.1ms tokens={'input_tokens': 420, 'output_tokens': 53, 'total_tokens': 473} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 10}
+2026-03-12 20:42:46,062 - agent_service - INFO - [gemini-2.5-flash] latency=4874.3ms tokens={'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 100, "number_of_vehicles": 30, "number_of_pedestrians": 20}
+2026-03-12 20:42:46,063 - agent_service - INFO - Completed sim_cd3d63bb for user 89ec7f9b-fef7-4c2a-b745-1401377df4a4 total_latency=4875.6ms models=4
+2026-03-12 20:42:46,064 - agent_service - INFO - RESP POST /generate_config status=200 latency=4886.8ms
+2026-03-12 20:42:51,039 - agent_service - INFO - REQ  OPTIONS /apply_config client=12.11.109.231
+2026-03-12 20:42:51,040 - agent_service - INFO - RESP OPTIONS /apply_config status=200 latency=1.3ms
+2026-03-12 20:42:51,077 - agent_service - INFO - REQ  POST /apply_config client=12.11.109.231 body={"config": {"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}, "model_name": "claude-sonnet-4"}
+2026-03-12 20:42:51,083 - agent_service - INFO - Applying config sim_398a909c to CARLA model=claude-sonnet-4 config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-12 20:42:51,084 - agent_service - INFO - Sending config to CARLA: {'weather': 'ClearSunset', 'map': 'Town03', 'number_of_vehicles': 15, 'number_of_pedestrians': 8, 'visibility': 85}
+2026-03-12 20:43:12,952 - httpx - INFO - HTTP Request: POST http://localhost:8502/apply_config "HTTP/1.1 200 OK"
+2026-03-12 20:43:12,954 - agent_service - INFO - CARLA accepted configuration
+2026-03-12 20:43:12,955 - agent_service - INFO - CARLA response for sim_398a909c: status=success
+2026-03-12 20:43:12,956 - agent_service - INFO - RESP POST /apply_config status=200 latency=21879.4ms
+2026-03-12 20:43:37,078 - agent_service - INFO - REQ  POST /apply_config client=12.11.109.231 body={"config": {"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}, "model_name": "claude-sonnet-4"}
+2026-03-12 20:43:37,080 - agent_service - INFO - Applying config sim_514cef30 to CARLA model=claude-sonnet-4 config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-12 20:43:37,081 - agent_service - INFO - Sending config to CARLA: {'weather': 'ClearSunset', 'map': 'Town03', 'number_of_vehicles': 15, 'number_of_pedestrians': 8, 'visibility': 85}
+2026-03-12 20:43:48,339 - httpx - INFO - HTTP Request: POST http://localhost:8502/apply_config "HTTP/1.1 200 OK"
+2026-03-12 20:43:48,341 - agent_service - INFO - CARLA accepted configuration
+2026-03-12 20:43:48,342 - agent_service - INFO - CARLA response for sim_514cef30: status=success
+2026-03-12 20:43:48,343 - agent_service - INFO - RESP POST /apply_config status=200 latency=11265.6ms
+2026-03-12 20:47:20,312 - agent_service - INFO - CARLA Configuration Agent Service shutting down
+2026-03-12 20:47:49,864 - agent_service - INFO - Model initialized: gemini-2.5-flash
+2026-03-12 20:47:49,865 - agent_service - INFO - Model initialized: claude-sonnet-4
+2026-03-12 20:47:50,430 - agent_service - INFO - Model initialized: gpt-4.1-mini
+2026-03-12 20:47:50,478 - agent_service - INFO - Model initialized: deepseek-v3
+2026-03-12 20:47:50,488 - agent_service - INFO - CARLA Configuration Agent Service started
+2026-03-12 20:47:50,488 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
+2026-03-12 20:47:50,488 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-12 20:48:00,720 - agent_service - INFO - REQ  POST /generate_config client=104.28.56.3 body={"prompt": "i want light traffic in the evening", "simulator": "carla"}
+2026-03-12 20:48:00,725 - agent_service - INFO - Processing request from user 4df72873-8494-4964-ac27-55f8ff1abaae: i want light traffic in the evening
+2026-03-12 20:48:01,174 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 20:48:03,218 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-12 20:48:03,293 - agent_service - INFO - [claude-sonnet-4] latency=2566.4ms tokens={'input_tokens': 484, 'output_tokens': 64, 'total_tokens': 548} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-12 20:48:03,490 - agent_service - INFO - [deepseek-v3] latency=2761.9ms tokens={'input_tokens': 420, 'output_tokens': 53, 'total_tokens': 473} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 10}
+2026-03-12 20:48:03,967 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 20:48:03,979 - agent_service - INFO - [gpt-4.1-mini] latency=3251.4ms tokens={'input_tokens': 412, 'output_tokens': 51, 'total_tokens': 463} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 80, "number_of_vehicles": 10, "number_of_pedestrians": 5}
+2026-03-12 20:48:06,093 - agent_service - INFO - [gemini-2.5-flash] latency=5367.0ms tokens={'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 100, "number_of_vehicles": 40, "number_of_pedestrians": 25}
+2026-03-12 20:48:06,093 - agent_service - INFO - Completed sim_fcf2e7f2 for user 4df72873-8494-4964-ac27-55f8ff1abaae total_latency=5368.2ms models=4
+2026-03-12 20:48:06,095 - agent_service - INFO - RESP POST /generate_config status=200 latency=5374.9ms
+2026-03-12 20:48:07,834 - agent_service - INFO - REQ  POST /apply_config client=104.28.56.3 body={"config": {"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}, "model_name": "claude-sonnet-4"}
+2026-03-12 20:48:07,839 - agent_service - INFO - Applying config sim_d3ef6846 to CARLA model=claude-sonnet-4 config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-12 20:48:07,840 - agent_service - INFO - Sending config to CARLA: {'weather': 'ClearSunset', 'map': 'Town03', 'number_of_vehicles': 15, 'number_of_pedestrians': 8, 'visibility': 85}
+2026-03-12 20:48:27,667 - httpx - INFO - HTTP Request: POST http://localhost:8502/apply_config "HTTP/1.1 200 OK"
+2026-03-12 20:48:27,670 - agent_service - INFO - CARLA accepted configuration
+2026-03-12 20:48:27,671 - agent_service - INFO - CARLA response for sim_d3ef6846: status=success
+2026-03-12 20:48:27,672 - agent_service - INFO - RESP POST /apply_config status=200 latency=19838.9ms

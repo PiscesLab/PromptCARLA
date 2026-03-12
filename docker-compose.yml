@@ -31,7 +31,7 @@ services:
       - CARLA_HOST=localhost
       - CARLA_PORT=2000
       - LOG_DIR=/app/logs
-      - TM_PORT=8100
+      - TM_PORT=5000
     volumes:
       - ./logs/simulator:/app/logs
     depends_on:
