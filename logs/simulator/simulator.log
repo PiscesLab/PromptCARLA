@@ -1,0 +1,104 @@
+2026-03-11 05:05:23,422 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 05:05:23,422 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:05:43,472 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 05:06:41,584 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:06:41,593 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-11 05:06:42,203 - simulator_service - INFO - Loading map Town01 (current: Town10HD_Opt)
+2026-03-11 05:06:50,957 - simulator_service - INFO - Map Town01 loaded successfully
+2026-03-11 05:06:50,982 - simulator_service - INFO - Cleanup complete: 0 vehicles, 0 pedestrians, 0 sensors, 0 controllers
+2026-03-11 05:06:50,983 - simulator_service - INFO - Weather set to ClearNoon
+2026-03-11 05:06:51,377 - simulator_service - ERROR - Failed to apply config: 'World' object has no attribute 'apply_batch_sync'
+2026-03-11 05:14:59,458 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 05:14:59,460 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 05:15:01,207 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 05:15:01,207 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:15:01,212 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-11 05:16:54,306 - simulator_service - INFO - Loading map Town06 (current: Town01)
+2026-03-11 05:16:54,486 - simulator_service - ERROR - Failed to apply config: Map 'Town06' not found
+2026-03-11 05:21:38,230 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 05:21:38,241 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 05:39:13,210 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 05:39:13,210 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:39:33,215 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 05:41:21,192 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:41:41,200 - simulator_service - ERROR - Failed to apply config: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 05:50:27,672 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 05:50:27,673 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 05:50:33,353 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 05:50:33,353 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:50:53,360 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 05:56:31,213 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:56:51,219 - simulator_service - ERROR - Failed to apply config: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 05:58:43,872 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 05:59:03,879 - simulator_service - ERROR - Failed to apply config: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 05:59:29,684 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 05:59:29,685 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 05:59:47,962 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 05:59:47,962 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 06:00:07,967 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 06:02:38,448 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 06:02:38,449 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 06:15:18,603 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 06:15:18,603 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 06:15:38,609 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 16:43:19,229 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 16:43:19,230 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 16:43:28,099 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 16:43:28,099 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 16:43:48,104 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 16:43:49,814 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 16:43:49,818 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-11 16:43:54,255 - simulator_service - INFO - Loading map Town02 (current: Town10HD_Opt)
+2026-03-11 16:44:01,692 - simulator_service - INFO - Map Town02 loaded successfully
+2026-03-11 16:44:01,722 - simulator_service - INFO - Cleanup: 0 vehicles, 0 pedestrians, 0 sensors, 0 controllers
+2026-03-11 16:44:01,723 - simulator_service - INFO - Weather set to ClearNoon
+2026-03-11 16:44:02,719 - simulator_service - INFO - Spawned 5/5 vehicles (autopilot=True)
+2026-03-11 16:44:03,026 - simulator_service - INFO - Spawned 3/3 pedestrians with AI controllers
+2026-03-11 17:05:52,328 - simulator_service - INFO - Loading map Town03 (current: Town02)
+2026-03-11 17:06:01,742 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 17:06:01,742 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 17:06:01,747 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-11 17:08:01,730 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 17:08:01,733 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 17:17:24,635 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 17:17:24,636 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 17:17:44,641 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 17:17:52,072 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 17:17:52,072 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 17:17:56,603 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 17:17:56,603 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 17:17:56,609 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-11 17:21:22,251 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 17:21:22,255 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 17:21:25,612 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 17:21:25,612 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 17:21:25,618 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-11 17:23:21,107 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-11 17:23:32,213 - simulator_service - INFO - Map Town03 loaded successfully
+2026-03-11 17:23:32,233 - simulator_service - INFO - Cleanup: 0 vehicles, 0 pedestrians, 0 sensors, 0 controllers
+2026-03-11 17:23:32,234 - simulator_service - INFO - Weather set to ClearSunset
+2026-03-11 17:23:42,282 - simulator_service - ERROR - Failed to apply config: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-11 17:25:51,317 - simulator_service - INFO - Simulator service shutting down
+2026-03-11 17:25:51,325 - simulator_service - INFO - Disconnected from CARLA
+2026-03-11 17:52:49,686 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-11 17:52:49,686 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 17:53:09,691 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-11 17:53:51,769 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 17:53:51,776 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-11 17:53:52,431 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-11 17:54:03,390 - simulator_service - INFO - Map Town03 loaded successfully
+2026-03-11 17:54:03,413 - simulator_service - INFO - Cleanup: 0 vehicles, 0 pedestrians, 0 sensors, 0 controllers
+2026-03-11 17:54:03,414 - simulator_service - INFO - Weather set to ClearSunset
+2026-03-11 17:54:13,458 - simulator_service - ERROR - Failed to apply config: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-11 21:56:24,342 - simulator_service - WARNING - Lost connection to CARLA, reconnecting...
+2026-03-11 21:56:24,354 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-11 21:56:44,360 - simulator_service - ERROR - Failed to apply config: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-12 12:59:41,240 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:04:20,810 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-12 20:04:20,810 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:04:40,815 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-12 20:14:18,095 - simulator_service - INFO - Simulator service shutting down
+2026-03-12 20:14:18,096 - simulator_service - INFO - Disconnected from CARLA
+2026-03-12 20:14:42,129 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-12 20:14:42,129 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:15:02,135 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000

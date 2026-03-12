@@ -1,0 +1,57 @@
+services:
+  carla:
+    image: carlasim/carla:latest
+    container_name: carlasim
+    runtime: nvidia
+    network_mode: "host"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
+    command: bash CarlaUE4.sh -RenderOffScreen -nosound
+    stdin_open: true
+    tty: true
+
+  simulator:
+    build:
+      context: ./simulator
+      dockerfile: Dockerfile
+    container_name: simulator
+    network_mode: "host"
+    environment:
+      - CARLA_HOST=localhost
+      - CARLA_PORT=2000
+      - LOG_DIR=/app/logs
+    volumes:
+      - ./logs/simulator:/app/logs
+    depends_on:
+      - carla
+    restart: unless-stopped
+
+  agent:
+    build:
+      context: ./agent
+      dockerfile: Dockerfile
+    container_name: agent
+    network_mode: "host"
+    env_file:
+      - .env
+    environment:
+      - NODE_IP=localhost
+      - LOG_DIR=/app/logs
+    volumes:
+      - ./logs/agent:/app/logs
+    depends_on:
+      - simulator
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8500}
+    container_name: frontend
+    network_mode: "host"
+    depends_on:
+      - agent
+    restart: unless-stopped
