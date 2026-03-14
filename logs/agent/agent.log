@@ -8493,3 +8493,71 @@
 2026-03-14 00:15:03,228 - agent_service - ERROR - CARLA request timeout after 30s
 2026-03-14 00:15:03,229 - agent_service - INFO - CARLA response for sim_e97dab6b: status=timeout
 2026-03-14 00:15:03,230 - agent_service - INFO - RESP POST /apply_config status=200 latency=30103.5ms
+2026-03-14 00:18:58,959 - agent_service - INFO - CARLA Configuration Agent Service shutting down
+2026-03-14 00:28:21,573 - agent_service - INFO - Model initialized: gemini-2.5-flash
+2026-03-14 00:28:21,574 - agent_service - INFO - Model initialized: claude-sonnet-4
+2026-03-14 00:28:22,133 - agent_service - INFO - Model initialized: gpt-4.1-mini
+2026-03-14 00:28:22,182 - agent_service - INFO - Model initialized: deepseek-v3
+2026-03-14 00:28:22,192 - agent_service - INFO - CARLA Configuration Agent Service started
+2026-03-14 00:28:22,192 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
+2026-03-14 00:28:22,192 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-14 00:28:28,748 - agent_service - INFO - REQ  GET /health client=172.226.7.96
+2026-03-14 00:28:28,750 - agent_service - INFO - RESP GET /health status=200 latency=1.6ms
+2026-03-14 00:28:38,957 - agent_service - INFO - REQ  GET /health client=172.226.7.96
+2026-03-14 00:28:38,959 - agent_service - INFO - RESP GET /health status=200 latency=2.1ms
+2026-03-14 00:28:42,281 - agent_service - INFO - REQ  GET /health client=172.226.7.96
+2026-03-14 00:28:42,283 - agent_service - INFO - RESP GET /health status=200 latency=2.0ms
+2026-03-14 00:28:52,592 - agent_service - INFO - REQ  GET /health client=172.226.7.96
+2026-03-14 00:28:52,594 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 00:28:57,188 - agent_service - INFO - REQ  OPTIONS /generate_config client=172.226.7.96
+2026-03-14 00:28:57,190 - agent_service - INFO - RESP OPTIONS /generate_config status=200 latency=1.4ms
+2026-03-14 00:28:57,390 - agent_service - INFO - REQ  POST /generate_config client=172.226.7.96 body={"prompt": "i want light traffic in the evening", "simulator": "carla"}
+2026-03-14 00:28:57,399 - agent_service - INFO - Processing request from user 75f0d008-a5ef-4433-a06d-c22b39e9bee4: i want light traffic in the evening
+2026-03-14 00:28:58,013 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 00:28:58,852 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 00:28:58,889 - agent_service - INFO - [gpt-4.1-mini] latency=1484.1ms tokens={'input_tokens': 412, 'output_tokens': 51, 'total_tokens': 463} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 80, "number_of_vehicles": 10, "number_of_pedestrians": 5}
+2026-03-14 00:28:59,105 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-14 00:28:59,181 - agent_service - INFO - [claude-sonnet-4] latency=1778.7ms tokens={'input_tokens': 484, 'output_tokens': 64, 'total_tokens': 548} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-14 00:29:00,472 - agent_service - INFO - [deepseek-v3] latency=3065.6ms tokens={'input_tokens': 420, 'output_tokens': 53, 'total_tokens': 473} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 10}
+2026-03-14 00:29:01,748 - agent_service - INFO - [gemini-2.5-flash] latency=4347.8ms tokens={'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 100, "number_of_vehicles": 30, "number_of_pedestrians": 20}
+2026-03-14 00:29:01,748 - agent_service - INFO - Completed sim_738e6dfe for user 75f0d008-a5ef-4433-a06d-c22b39e9bee4 total_latency=4349.1ms models=4
+2026-03-14 00:29:01,750 - agent_service - INFO - RESP POST /generate_config status=200 latency=4465.5ms
+2026-03-14 00:29:02,300 - agent_service - INFO - REQ  GET /health client=172.226.7.96
+2026-03-14 00:29:02,302 - agent_service - INFO - RESP GET /health status=200 latency=2.5ms
+2026-03-14 00:29:04,339 - agent_service - INFO - REQ  OPTIONS /apply_config client=172.226.7.96
+2026-03-14 00:29:04,340 - agent_service - INFO - RESP OPTIONS /apply_config status=200 latency=1.3ms
+2026-03-14 00:29:04,537 - agent_service - INFO - REQ  POST /apply_config client=172.226.7.96 body={"config": {"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}, "model_name": "claude-sonnet-4"}
+2026-03-14 00:29:04,543 - agent_service - INFO - Applying config sim_91e35dd3 to CARLA model=claude-sonnet-4 config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-14 00:29:04,543 - agent_service - INFO - Sending config to CARLA: {'weather': 'ClearSunset', 'map': 'Town03', 'number_of_vehicles': 15, 'number_of_pedestrians': 8, 'visibility': 85}
+2026-03-14 00:29:12,378 - agent_service - INFO - REQ  GET /health client=172.226.7.96
+2026-03-14 00:29:12,380 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 00:29:22,368 - agent_service - INFO - REQ  GET /health client=172.226.7.96
+2026-03-14 00:29:22,370 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 00:29:22,777 - httpx - INFO - HTTP Request: POST http://localhost:8502/apply_config "HTTP/1.1 200 OK"
+2026-03-14 00:29:22,779 - agent_service - INFO - CARLA accepted configuration
+2026-03-14 00:29:22,780 - agent_service - INFO - CARLA response for sim_91e35dd3: status=success
+2026-03-14 00:29:22,781 - agent_service - INFO - RESP POST /apply_config status=200 latency=18350.5ms
+2026-03-14 00:29:46,929 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 00:29:46,931 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 00:29:50,501 - agent_service - INFO - REQ  POST /generate_config client=172.226.3.250 body={"prompt": "Light traffic on a clear day in a small town", "simulator": "carla"}
+2026-03-14 00:29:50,503 - agent_service - INFO - Processing request from user 77eb7376-3059-4c39-8a71-eba5d342a495: Light traffic on a clear day in a small town
+2026-03-14 00:29:50,890 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 00:29:51,906 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 00:29:51,914 - agent_service - INFO - [gpt-4.1-mini] latency=1408.9ms tokens={'input_tokens': 415, 'output_tokens': 51, 'total_tokens': 466} valid=True config={"weather": "ClearNoon", "map": "Town02", "time_of_day": null, "visibility": 100, "number_of_vehicles": 10, "number_of_pedestrians": 5}
+2026-03-14 00:29:52,051 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-14 00:29:52,057 - agent_service - INFO - [claude-sonnet-4] latency=1552.2ms tokens={'input_tokens': 487, 'output_tokens': 63, 'total_tokens': 550} valid=True config={"weather": "ClearNoon", "map": "Town01", "time_of_day": null, "visibility": 95, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-14 00:29:53,118 - agent_service - INFO - [gemini-2.5-flash] latency=2613.9ms tokens={'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0} valid=True config={"weather": "ClearNoon", "map": "Town01", "time_of_day": null, "visibility": 100, "number_of_vehicles": 15, "number_of_pedestrians": 10}
+2026-03-14 00:29:53,232 - agent_service - INFO - [deepseek-v3] latency=2726.1ms tokens={'input_tokens': 423, 'output_tokens': 53, 'total_tokens': 476} valid=True config={"weather": "ClearNoon", "map": "Town01", "time_of_day": null, "visibility": 100, "number_of_vehicles": 15, "number_of_pedestrians": 10}
+2026-03-14 00:29:53,233 - agent_service - INFO - Completed sim_8f7e1171 for user 77eb7376-3059-4c39-8a71-eba5d342a495 total_latency=2729.1ms models=4
+2026-03-14 00:29:53,234 - agent_service - INFO - RESP POST /generate_config status=200 latency=2827.6ms
+2026-03-14 00:29:55,518 - agent_service - INFO - REQ  POST /apply_config client=172.226.3.250 body={"config": {"weather": "ClearNoon", "map": "Town01", "time_of_day": null, "visibility": 100, "number_of_vehicles": 15, "number_of_pedestrians": 10}, "model_name": "gemini-2.5-flash"}
+2026-03-14 00:29:55,520 - agent_service - INFO - Applying config sim_62048940 to CARLA model=gemini-2.5-flash config={"weather": "ClearNoon", "map": "Town01", "time_of_day": null, "visibility": 100, "number_of_vehicles": 15, "number_of_pedestrians": 10}
+2026-03-14 00:29:55,521 - agent_service - INFO - Sending config to CARLA: {'weather': 'ClearNoon', 'map': 'Town01', 'number_of_vehicles': 15, 'number_of_pedestrians': 10, 'visibility': 100}
+2026-03-14 00:29:56,936 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 00:29:56,937 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 00:30:06,924 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 00:30:06,925 - agent_service - INFO - RESP GET /health status=200 latency=1.7ms
+2026-03-14 00:30:07,952 - httpx - INFO - HTTP Request: POST http://localhost:8502/apply_config "HTTP/1.1 200 OK"
+2026-03-14 00:30:07,955 - agent_service - INFO - CARLA accepted configuration
+2026-03-14 00:30:07,961 - agent_service - INFO - CARLA response for sim_62048940: status=success
+2026-03-14 00:30:07,964 - agent_service - INFO - RESP POST /apply_config status=200 latency=12499.4ms

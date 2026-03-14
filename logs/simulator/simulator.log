@@ -260,3 +260,23 @@
 2026-03-14 00:14:47,543 - simulator_service - INFO - Initializing Traffic Manager on port 5000
 2026-03-14 00:15:02,835 - simulator_service - INFO - Spawned 15/15 vehicles
 2026-03-14 00:15:10,312 - simulator_service - INFO - Spawned 2/8 pedestrians
+2026-03-14 00:19:01,867 - simulator_service - INFO - Disconnected from CARLA
+2026-03-14 00:28:17,974 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-14 00:28:17,983 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-14 00:28:17,983 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-14 00:28:37,989 - simulator_service - ERROR - Failed to connect to CARLA on startup: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-14 00:29:04,601 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-14 00:29:04,609 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-14 00:29:05,267 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-14 00:29:18,321 - simulator_service - INFO - Map Town03 loaded successfully
+2026-03-14 00:29:18,343 - simulator_service - INFO - Cleanup finished. Actors destroyed: status='success' vehicles_destroyed=0 pedestrians_destroyed=0 controllers_destroyed=0 sensors_destroyed=0
+2026-03-14 00:29:18,343 - simulator_service - INFO - Weather preset applied: ClearSunset
+2026-03-14 00:29:18,359 - simulator_service - INFO - Initializing Traffic Manager on port 5000
+2026-03-14 00:29:21,040 - simulator_service - INFO - Spawned 15/15 vehicles
+2026-03-14 00:29:22,771 - simulator_service - INFO - Spawned 5/8 pedestrians
+2026-03-14 00:29:55,574 - simulator_service - INFO - Loading map Town01 (current: Town03)
+2026-03-14 00:30:06,085 - simulator_service - INFO - Map Town01 loaded successfully
+2026-03-14 00:30:06,088 - simulator_service - INFO - Cleanup finished. Actors destroyed: status='success' vehicles_destroyed=0 pedestrians_destroyed=0 controllers_destroyed=0 sensors_destroyed=0
+2026-03-14 00:30:06,089 - simulator_service - INFO - Weather preset applied: ClearNoon
+2026-03-14 00:30:07,498 - simulator_service - INFO - Spawned 15/15 vehicles
+2026-03-14 00:30:07,946 - simulator_service - INFO - Spawned 5/10 pedestrians
