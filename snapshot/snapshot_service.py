@@ -74,23 +74,43 @@ def extract_light_data(l) -> Dict:
     }
 
 def build_map_data(carla_map) -> Dict:
-    """Extract road topology and spawn points from the CARLA map. Cached after first call."""
-    topology = carla_map.get_topology()
-    roads = []
-    for seg in topology:
-        start = seg[0].transform.location
-        end = seg[1].transform.location
-        roads.append({
-            "start": {"x": start.x, "y": start.y},
-            "end":   {"x": end.x,   "y": end.y},
+    """
+    Build road geometry using dense waypoint sampling rather than the sparse
+    topology graph. generate_waypoints() samples every lane at a fixed interval
+    which gives enough points to reconstruct actual road shapes on the frontend.
+
+    Each waypoint also carries lane width so the frontend can draw proper road
+    polygons instead of just centerlines.
+    """
+    WAYPOINT_DISTANCE = 2.0  # metres between samples — lower = more detail, more data
+
+    waypoints = carla_map.generate_waypoints(WAYPOINT_DISTANCE)
+
+    # Group waypoints by (road_id, lane_id) so the frontend can draw each lane
+    # as a polyline rather than a cloud of disconnected points.
+    lanes: Dict[str, list] = {}
+    for wp in waypoints:
+        key = f"{wp.road_id}_{wp.lane_id}"
+        if key not in lanes:
+            lanes[key] = []
+        t = wp.transform
+        lanes[key].append({
+            "x": t.location.x,
+            "y": t.location.y,
+            "width": wp.lane_width,
         })
+
+    # Convert to a list for JSON serialisation
+    lane_list = [{"points": pts} for pts in lanes.values()]
 
     spawn_points = carla_map.get_spawn_points()
     spawns = [{"x": sp.location.x, "y": sp.location.y} for sp in spawn_points]
 
+    logger.info(f"Map data: {len(lane_list)} lanes, {len(spawns)} spawn points")
+
     return {
         "map_name": carla_map.name,
-        "roads": roads,
+        "lanes": lane_list,
         "spawn_points": spawns,
     }
 

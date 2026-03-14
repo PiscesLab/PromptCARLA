@@ -350,3 +350,16 @@
 2026-03-14 02:01:06,948 - simulator_service - INFO - Spawned 15/15 vehicles
 2026-03-14 02:01:07,518 - simulator_service - INFO - Spawned 2/8 pedestrians
 2026-03-14 02:03:23,998 - simulator_service - INFO - Disconnected from CARLA
+2026-03-14 02:04:53,585 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-14 02:04:53,594 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-14 02:04:53,594 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-14 02:05:13,599 - simulator_service - ERROR - Failed to connect to CARLA on startup: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-14 02:05:57,061 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-14 02:05:57,068 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-14 02:05:57,699 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-14 02:06:11,158 - simulator_service - INFO - Map Town03 loaded successfully
+2026-03-14 02:06:11,184 - simulator_service - INFO - Cleanup finished. Actors destroyed: status='success' vehicles_destroyed=0 pedestrians_destroyed=0 controllers_destroyed=0 sensors_destroyed=0
+2026-03-14 02:06:11,185 - simulator_service - INFO - Weather preset applied: ClearSunset
+2026-03-14 02:06:11,220 - simulator_service - INFO - Initializing Traffic Manager on port 5000
+2026-03-14 02:06:14,737 - simulator_service - INFO - Spawned 15/15 vehicles
+2026-03-14 02:06:15,501 - simulator_service - INFO - Spawned 3/8 pedestrians

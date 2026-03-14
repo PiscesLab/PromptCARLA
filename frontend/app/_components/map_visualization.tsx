@@ -9,13 +9,17 @@ import { Separator } from '@/components/ui/separator';
 interface MapBounds {
   min_x: number; max_x: number; min_y: number; max_y: number;
 }
-interface RoadSegment {
-  start: { x: number; y: number };
-  end:   { x: number; y: number };
+interface LanePoint {
+  x: number;
+  y: number;
+  width: number;
+}
+interface Lane {
+  points: LanePoint[];
 }
 interface MapData {
   map_name: string;
-  roads: RoadSegment[];
+  lanes: Lane[];
   spawn_points: { x: number; y: number }[];
 }
 interface Vehicle {
@@ -69,15 +73,15 @@ const LIGHT_COLOR: Record<string, number> = {
 };
 
 // ===================== Helpers =====================
-function boundsFromRoads(roads: RoadSegment[]): MapBounds {
-  if (roads.length === 0) return { min_x: -100, max_x: 100, min_y: -100, max_y: 100 };
+function boundsFromLanes(lanes: Lane[]): MapBounds {
+  if (lanes.length === 0) return { min_x: -100, max_x: 100, min_y: -100, max_y: 100 };
   let min_x = Infinity, max_x = -Infinity, min_y = Infinity, max_y = -Infinity;
-  roads.forEach(r => {
-    min_x = Math.min(min_x, r.start.x, r.end.x);
-    max_x = Math.max(max_x, r.start.x, r.end.x);
-    min_y = Math.min(min_y, r.start.y, r.end.y);
-    max_y = Math.max(max_y, r.start.y, r.end.y);
-  });
+  lanes.forEach(lane =>
+    lane.points.forEach(p => {
+      min_x = Math.min(min_x, p.x); max_x = Math.max(max_x, p.x);
+      min_y = Math.min(min_y, p.y); max_y = Math.max(max_y, p.y);
+    })
+  );
   const padX = (max_x - min_x) * 0.05;
   const padY = (max_y - min_y) * 0.05;
   return { min_x: min_x - padX, max_x: max_x + padX, min_y: min_y - padY, max_y: max_y + padY };
@@ -136,20 +140,33 @@ export default function MapVisualization({ simulationId }: { simulationId: strin
     let handleResize: (() => void) | null = null;
 
     const drawRoads = (app: any, PIXI: any) => {
-      const roads = mapDataRef.current?.roads ?? [];
+      const lanes = mapDataRef.current?.lanes ?? [];
       const b = boundsRef.current;
       const layer = layersRef.current?.roads;
-      if (!layer || !b || roads.length === 0) return;
+      if (!layer || !b || lanes.length === 0) return;
       const W = app.renderer.width;
       const H = app.renderer.height;
+
       layer.clear();
-      layer.setStrokeStyle({ width: 3, color: COLOR.road, cap: 'round', join: 'round' });
-      roads.forEach(road => {
-        const s = worldToPixi(road.start.x, road.start.y, b, W, H);
-        const e = worldToPixi(road.end.x,   road.end.y,   b, W, H);
-        layer.moveTo(s.x, s.y).lineTo(e.x, e.y);
+
+      // Draw each lane as a polyline — stroke width derived from the lane's
+      // waypoint width scaled to screen space so it looks proportional
+      const scale = Math.min((W - 80) / (b.max_x - b.min_x), (H - 80) / (b.max_y - b.min_y));
+
+      lanes.forEach(lane => {
+        if (lane.points.length < 2) return;
+        const avgWidth = lane.points.reduce((s, p) => s + p.width, 0) / lane.points.length;
+        const strokeWidth = Math.max(1, avgWidth * scale * 0.5);
+
+        layer.setStrokeStyle({ width: strokeWidth, color: COLOR.road, cap: 'round', join: 'round' });
+        const first = worldToPixi(lane.points[0].x, lane.points[0].y, b, W, H);
+        layer.moveTo(first.x, first.y);
+        for (let i = 1; i < lane.points.length; i++) {
+          const pt = worldToPixi(lane.points[i].x, lane.points[i].y, b, W, H);
+          layer.lineTo(pt.x, pt.y);
+        }
+        layer.stroke();
       });
-      layer.stroke();
     };
 
     const init = async () => {
@@ -201,7 +218,7 @@ export default function MapVisualization({ simulationId }: { simulationId: strin
         .then((data: MapData) => {
           if (destroyed) return;
           mapDataRef.current = data;
-          boundsRef.current = boundsFromRoads(data.roads);
+          boundsRef.current = boundsFromLanes(data.lanes);
           setMapName(data.map_name);
           drawRoads(app, PIXI);
         })
