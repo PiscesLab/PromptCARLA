@@ -22,7 +22,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 
-
 # ===================== 1. Configuration and Logging =====================
 
 for _candidate in [Path(__file__).parent / '.env', Path(__file__).parent.parent / '.env']:
@@ -32,24 +31,25 @@ for _candidate in [Path(__file__).parent / '.env', Path(__file__).parent.parent 
 
 LOG_DIR = Path(os.getenv("LOG_DIR", "/app/logs"))
 LOG_DIR.mkdir(parents=True, exist_ok=True)
-
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
-_file_handler = RotatingFileHandler(
-    LOG_DIR / "agent.log", maxBytes=10 * 1024 * 1024, backupCount=5
-)
+_file_handler = RotatingFileHandler(LOG_DIR / "agent.log", maxBytes=10*1024*1024, backupCount=5)
 _file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
-_file_handler.setLevel(logging.INFO)
 logging.getLogger().addHandler(_file_handler)
-
 logger = logging.getLogger(__name__)
 
-NODE_IP = os.getenv("NODE_IP", "localhost")
-CARLA_SERVER_URL = f"http://{NODE_IP}:8502/apply_config"
+# Environment-driven Ports and IPs
+# Using AGENT_PORT from .env, defaulting to 8500
+LISTENING_PORT = int(os.getenv("AGENT_PORT", os.getenv("PORT", "8500")))
+
+# In network_mode: "host", services communicate via localhost.
+# We ignore NEXT_PUBLIC_NODE_IP for internal routing to avoid NAT/Firewall issues.
+INTERNAL_NODE_IP = "localhost"
+SIM_PORT = os.getenv("SIMULATOR_PORT", "8502") 
+
+CARLA_SERVER_URL = f"http://{INTERNAL_NODE_IP}:{SIM_PORT}/apply_config"
 CARLA_TIMEOUT = int(os.getenv("CARLA_TIMEOUT", "30"))
-APP_NAME = "traffic_config_generator"
 
 
 # ===================== 2. Valid Enums =====================
@@ -599,6 +599,13 @@ async def apply_config(request: ApplyConfigRequest):
 
 # ===================== 11. Run Server =====================
 
+# ===================== 11. Run Server =====================
+
 if __name__ == "__main__":
+    logger.info(f"Starting Agent Service on host port {LISTENING_PORT}")
+    logger.info(f"Internal routing to Simulator at {CARLA_SERVER_URL}")
+
+    # We use "0.0.0.0" so it's accessible externally via your NEXT_PUBLIC_NODE_IP,
+    # but internally it will also respond to localhost requests.
     import uvicorn
-    uvicorn.run("agent_service:app", host="0.0.0.0", port=8500, reload=True, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=LISTENING_PORT)

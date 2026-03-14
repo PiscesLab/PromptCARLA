@@ -3,13 +3,12 @@ services:
     image: carlasim/carla:0.9.16
     container_name: carlasim
     runtime: nvidia
-    network_mode: "host"
-    # CRITICAL: Fixes Signal 7 Bus Error by increasing shared memory from 64MB
+    network_mode: 'host'
     shm_size: '2GB'
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
-      # Forces OpenGL for better stability on headless Tesla P100 nodes
+    # Using host network, so CARLA_PORT (2000) is exposed directly on the node
     command: /bin/bash CarlaUE4.sh -opengl -RenderOffScreen -nosound
     stdin_open: true
     tty: true
@@ -26,12 +25,13 @@ services:
       context: ./simulator
       dockerfile: Dockerfile
     container_name: simulator
-    network_mode: "host"
+    network_mode: 'host'
     environment:
       - CARLA_HOST=localhost
-      - CARLA_PORT=2000
+      - CARLA_PORT=${CARLA_PORT:-2000}
+      - TM_PORT=${TM_PORT:-5000}
+      - PORT=${SIMULATOR_PORT:-8502}
       - LOG_DIR=/app/logs
-      - TM_PORT=5000
     volumes:
       - ./logs/simulator:/app/logs
     depends_on:
@@ -44,11 +44,11 @@ services:
       context: ./snapshot
       dockerfile: Dockerfile
     container_name: snapshot
-    network_mode: "host"
+    network_mode: 'host'
     environment:
-      - NODE_IP=localhost
-      - CARLA_PORT=2000
-      - TM_PORT=5000
+      - CARLA_HOST=localhost
+      - CARLA_PORT=${CARLA_PORT:-2000}
+      - PORT=${SNAPSHOT_PORT:-8000}
       - LOG_DIR=/app/logs
     volumes:
       - ./logs/snapshot:/app/logs
@@ -61,12 +61,16 @@ services:
       context: ./agent
       dockerfile: Dockerfile
     container_name: agent
-    network_mode: "host"
-    env_file:
-      - .env
+    network_mode: 'host'
     environment:
-      - NODE_IP=localhost
+      - PORT=${AGENT_PORT:-8500}
+      - NODE_IP=${NEXT_PUBLIC_NODE_IP}
+      - SIMULATOR_PORT=${SIMULATOR_PORT:-8502}
       - LOG_DIR=/app/logs
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
     volumes:
       - ./logs/agent:/app/logs
     depends_on:
@@ -79,9 +83,16 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8500}
+        - NEXT_PUBLIC_NODE_IP=${NEXT_PUBLIC_NODE_IP}
+        - NEXT_PUBLIC_API_PORT=${AGENT_PORT:-8500}
+        - NEXT_PUBLIC_AGENT_PORT=${AGENT_PORT:-8500}
+        - NEXT_PUBLIC_SNAPSHOT_PORT=${SNAPSHOT_PORT:-8000}
     container_name: frontend
-    network_mode: "host"
+    network_mode: 'host'
+    environment:
+      - NEXT_PUBLIC_NODE_IP=${NEXT_PUBLIC_NODE_IP}
+      - NEXT_PUBLIC_API_PORT=${AGENT_PORT:-8500}
+      - NEXT_PUBLIC_SNAPSHOT_PORT=${SNAPSHOT_PORT:-8000}
     depends_on:
       agent:
         condition: service_started

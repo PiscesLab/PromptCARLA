@@ -10,46 +10,58 @@ import os
 import random
 import asyncio
 import logging
+import time
 from typing import Optional, List
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 import carla
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 
+# ===================== 1. Configuration & Logging =====================
 
-# ===================== Configuration =====================
-
+# Load .env from current or parent directory
 for _candidate in [Path(__file__).parent / '.env', Path(__file__).parent.parent / '.env']:
     if _candidate.exists():
         load_dotenv(dotenv_path=_candidate)
         break
 
-CARLA_HOST = os.getenv("CARLA_HOST", os.getenv("NODE_IP", "localhost"))
+# CARLA Engine Connection
+CARLA_HOST = os.getenv("CARLA_HOST", "localhost")
 CARLA_PORT = int(os.getenv("CARLA_PORT", "2000"))
 CARLA_TIMEOUT = float(os.getenv("CARLA_TIMEOUT", "20.0"))
 
+# Network & Ports
+# Priority: 1. PORT (Docker standard) 2. SERVICE_PORT 3. NEXT_PUBLIC_API_PORT 4. Default 8502
+LISTENING_PORT = int(os.getenv("PORT", os.getenv("SERVICE_PORT", os.getenv("NEXT_PUBLIC_API_PORT", "8502"))))
+TM_PORT = int(os.getenv("TM_PORT", "5000"))
+
+# Logging Setup
 LOG_DIR = Path(os.getenv("LOG_DIR", "/app/logs"))
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
-_file_handler = RotatingFileHandler(
-    LOG_DIR / "simulator.log", maxBytes=10 * 1024 * 1024, backupCount=5
-)
+# File Logging with Rotation
+_log_file = LOG_DIR / "simulator.log"
+_file_handler = RotatingFileHandler(_log_file, maxBytes=10 * 1024 * 1024, backupCount=5)
 _file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
 _file_handler.setLevel(logging.INFO)
 logging.getLogger().addHandler(_file_handler)
 
 logger = logging.getLogger("simulator_service")
 
+# Log startup config for easier debugging
+logger.info(f"Configured Simulator: Port={LISTENING_PORT}, TM_Port={TM_PORT}, CARLA={CARLA_HOST}:{CARLA_PORT}")
 
-# ===================== Request/Response Models =====================
+
+# ===================== 2. Request/Response Models =====================
 
 class ConfigRequest(BaseModel):
     weather: str = Field(default="ClearNoon", description="CARLA weather preset")
@@ -76,13 +88,14 @@ class ApplyResponse(BaseModel):
     error: Optional[str] = None
 
 
-# ===================== CARLA Client Manager =====================
+# ===================== 3. CARLA Client Manager =====================
 
 class CarlaClientManager:
-    def __init__(self, host: str, port: int, timeout: float):
+    def __init__(self, host: str, port: int, timeout: float, tm_port: int):
         self._host = host
         self._port = port
         self._timeout = timeout
+        self._tm_port = tm_port
         self._client: Optional[carla.Client] = None
         self._traffic_manager: Optional[carla.TrafficManager] = None
 
@@ -114,8 +127,10 @@ class CarlaClientManager:
 
     @property
     def traffic_manager(self) -> carla.TrafficManager:
+        """Uses unique TM_PORT to avoid bind errors on host network."""
         if self._traffic_manager is None:
-            self._traffic_manager = self.client.get_trafficmanager(8000)
+            logger.info(f"Initializing Traffic Manager on port {self._tm_port}")
+            self._traffic_manager = self.client.get_trafficmanager(self._tm_port)
             self._traffic_manager.set_global_distance_to_leading_vehicle(2.5)
             self._traffic_manager.set_synchronous_mode(False)
         return self._traffic_manager
@@ -126,8 +141,11 @@ class CarlaClientManager:
         if current_short == map_name:
             logger.info(f"Map {map_name} already loaded, skipping reload")
             return self.world
+        
         logger.info(f"Loading map {map_name} (current: {current_short})")
         self._client.load_world(map_name)
+        # Give CARLA a moment to switch and initialize
+        time.sleep(2) 
         world = self._client.get_world()
         logger.info(f"Map {map_name} loaded successfully")
         return world
@@ -138,61 +156,54 @@ class CarlaClientManager:
         logger.info("Disconnected from CARLA")
 
 
-carla_manager = CarlaClientManager(CARLA_HOST, CARLA_PORT, CARLA_TIMEOUT)
+# Initialize global manager
+carla_manager = CarlaClientManager(CARLA_HOST, CARLA_PORT, CARLA_TIMEOUT, TM_PORT)
 
 
-# ===================== Actor Management =====================
+# ===================== 4. Actor Management =====================
 
 def destroy_all_actors(world: carla.World) -> CleanupResponse:
     actors = world.get_actors()
     result = CleanupResponse(status="success")
 
+    # Filter and destroy sensors first (cleaner shutdown)
     for actor in actors.filter("sensor.*"):
         try:
             actor.destroy()
             result.sensors_destroyed += 1
-        except RuntimeError as e:
-            logger.warning(f"Failed to destroy sensor {actor.id}: {e}")
+        except RuntimeError: pass
 
     for actor in actors.filter("controller.ai.walker"):
         try:
             actor.stop()
             actor.destroy()
             result.controllers_destroyed += 1
-        except RuntimeError as e:
-            logger.warning(f"Failed to destroy controller {actor.id}: {e}")
+        except RuntimeError: pass
 
     for actor in actors.filter("vehicle.*"):
         try:
             actor.set_autopilot(False)
             actor.destroy()
             result.vehicles_destroyed += 1
-        except RuntimeError as e:
-            logger.warning(f"Failed to destroy vehicle {actor.id}: {e}")
+        except RuntimeError: pass
 
     for actor in actors.filter("walker.pedestrian.*"):
         try:
             actor.destroy()
             result.pedestrians_destroyed += 1
-        except RuntimeError as e:
-            logger.warning(f"Failed to destroy walker {actor.id}: {e}")
+        except RuntimeError: pass
 
-    logger.info(
-        f"Cleanup: {result.vehicles_destroyed} vehicles, "
-        f"{result.pedestrians_destroyed} pedestrians, "
-        f"{result.sensors_destroyed} sensors, "
-        f"{result.controllers_destroyed} controllers"
-    )
+    logger.info(f"Cleanup finished. Actors destroyed: {result}")
     return result
 
 
 def spawn_vehicles(
-    world: carla.World,
-    count: int,
-    enable_autopilot: bool,
-    traffic_manager: carla.TrafficManager,
+    world: carla.World, 
+    count: int, 
+    enable_autopilot: bool, 
+    traffic_manager: carla.TrafficManager
 ) -> List[int]:
-    if count == 0:
+    if count <= 0:
         return []
 
     blueprints = world.get_blueprint_library().filter("vehicle.*")
@@ -200,7 +211,7 @@ def spawn_vehicles(
     random.shuffle(spawn_points)
 
     if count > len(spawn_points):
-        logger.warning(f"Requested {count} vehicles but only {len(spawn_points)} spawn points, capping")
+        logger.warning(f"Capping vehicles at {len(spawn_points)} spawn points")
         count = len(spawn_points)
 
     batch = []
@@ -209,6 +220,7 @@ def spawn_vehicles(
         if bp.has_attribute("color"):
             color = random.choice(bp.get_attribute("color").recommended_values)
             bp.set_attribute("color", color)
+        
         batch.append(
             carla.command.SpawnActor(bp, spawn_points[i]).then(
                 carla.command.SetAutopilot(
@@ -218,19 +230,13 @@ def spawn_vehicles(
         )
 
     results = carla_manager.client.apply_batch_sync(batch, True)
-    spawned = []
-    for r in results:
-        if r.error:
-            logger.warning(f"Vehicle spawn failed: {r.error}")
-        else:
-            spawned.append(r.actor_id)
-
-    logger.info(f"Spawned {len(spawned)}/{count} vehicles (autopilot={enable_autopilot})")
+    spawned = [r.actor_id for r in results if not r.error]
+    logger.info(f"Spawned {len(spawned)}/{count} vehicles")
     return spawned
 
 
 def spawn_pedestrians(world: carla.World, count: int) -> List[int]:
-    if count == 0:
+    if count <= 0:
         return []
 
     blueprints = world.get_blueprint_library().filter("walker.pedestrian.*")
@@ -239,68 +245,49 @@ def spawn_pedestrians(world: carla.World, count: int) -> List[int]:
     walker_batch = []
     for _ in range(count):
         bp = random.choice(blueprints)
-        if bp.has_attribute("is_invincible"):
-            bp.set_attribute("is_invincible", "false")
         location = world.get_random_location_from_navigation()
-        if location is None:
-            continue
-        walker_batch.append(carla.command.SpawnActor(bp, carla.Transform(location)))
+        if location:
+            walker_batch.append(carla.command.SpawnActor(bp, carla.Transform(location)))
 
     walker_results = carla_manager.client.apply_batch_sync(walker_batch, True)
-    walker_ids = []
-    for r in walker_results:
-        if r.error:
-            logger.warning(f"Pedestrian spawn failed: {r.error}")
-        else:
-            walker_ids.append(r.actor_id)
+    walker_ids = [r.actor_id for r in walker_results if not r.error]
 
-    controller_batch = []
-    for wid in walker_ids:
-        controller_batch.append(
-            carla.command.SpawnActor(controller_bp, carla.Transform(), world.get_actor(wid))
-        )
-
+    # Spawn AI controllers for successful walkers
+    controller_batch = [
+        carla.command.SpawnActor(controller_bp, carla.Transform(), world.get_actor(wid))
+        for wid in walker_ids
+    ]
     controller_results = carla_manager.client.apply_batch_sync(controller_batch, True)
 
     for r in controller_results:
         if not r.error:
             controller = world.get_actor(r.actor_id)
-            if controller is not None:
+            if controller:
                 controller.start()
                 dest = world.get_random_location_from_navigation()
-                if dest:
-                    controller.go_to_location(dest)
-                controller.set_max_speed(1.0 + random.random() * 1.5)
+                if dest: controller.go_to_location(dest)
 
-    logger.info(f"Spawned {len(walker_ids)}/{count} pedestrians with AI controllers")
+    logger.info(f"Spawned {len(walker_ids)}/{count} pedestrians")
     return walker_ids
 
 
-# ===================== FastAPI Application =====================
+# ===================== 5. FastAPI Application =====================
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info(f"Simulator service starting, CARLA target: {CARLA_HOST}:{CARLA_PORT}")
+    logger.info(f"Simulator service starting. CARLA target: {CARLA_HOST}:{CARLA_PORT}")
     try:
         carla_manager.connect()
     except Exception as e:
-        logger.warning(f"Initial CARLA connection failed (will retry on first request): {e}")
+        logger.error(f"Failed to connect to CARLA on startup: {e}")
     yield
-    logger.info("Simulator service shutting down")
     carla_manager.disconnect()
 
-
-app = FastAPI(
-    title="CARLA Simulator Service",
-    description="HTTP bridge to CARLA Python API",
-    version="2.0.0",
-    lifespan=lifespan,
-)
+app = FastAPI(title="CARLA Simulator Service", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -308,36 +295,19 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    connected = False
-    server_version = None
-    try:
-        server_version = carla_manager.client.get_server_version()
-        connected = True
-    except Exception:
-        pass
     return {
-        "service": "CARLA Simulator Service",
-        "version": "2.0.0",
-        "carla_connected": connected,
-        "carla_server_version": server_version,
+        "status": "online",
         "carla_host": CARLA_HOST,
-        "carla_port": CARLA_PORT,
+        "tm_port": TM_PORT,
+        "api_port": LISTENING_PORT
     }
-
-
-@app.get("/health")
-async def health():
-    try:
-        version = carla_manager.client.get_server_version()
-        current_map = carla_manager.world.get_map().name.split("/")[-1]
-        return {"status": "healthy", "carla_version": version, "current_map": current_map}
-    except Exception as e:
-        raise HTTPException(status_code=503, detail=f"CARLA unavailable: {e}")
 
 
 @app.post("/apply_config", response_model=ApplyResponse)
 async def apply_config(config: ConfigRequest):
+    """Bridge for the Agent to apply LLM-generated configurations."""
     try:
+        # Offload heavy simulation logic to a separate thread
         result = await asyncio.get_event_loop().run_in_executor(
             None, _apply_config_sync, config
         )
@@ -348,77 +318,46 @@ async def apply_config(config: ConfigRequest):
 
 
 def _apply_config_sync(config: ConfigRequest) -> ApplyResponse:
+    """Synchronous core logic for map switching and actor management."""
+    # 1. Map Handling
     if config.map:
         world = carla_manager.load_map(config.map)
     else:
         world = carla_manager.world
 
+    # 2. Complete actor purge
     destroy_all_actors(world)
 
-    weather_applied = "ClearNoon"
+    # 3. Weather update
     try:
         weather_param = getattr(carla.WeatherParameters, config.weather)
         world.set_weather(weather_param)
-        weather_applied = config.weather
-        logger.info(f"Weather set to {config.weather}")
+        logger.info(f"Weather preset applied: {config.weather}")
     except AttributeError:
-        logger.warning(f"Unknown weather preset '{config.weather}', keeping current")
-        weather_applied = config.weather + " (unknown, not applied)"
+        logger.warning(f"Invalid weather preset requested: {config.weather}")
 
+    # Synchronize world state
     world.tick()
 
-    vehicle_ids = spawn_vehicles(
-        world, config.number_of_vehicles, config.enable_autopilot, carla_manager.traffic_manager
+    # 4. Spawning workflow
+    v_ids = spawn_vehicles(
+        world, 
+        config.number_of_vehicles, 
+        config.enable_autopilot, 
+        carla_manager.traffic_manager
     )
-    pedestrian_ids = spawn_pedestrians(world, config.number_of_pedestrians)
-
-    current_map = world.get_map().name.split("/")[-1]
+    p_ids = spawn_pedestrians(world, config.number_of_pedestrians)
 
     return ApplyResponse(
         status="success",
-        map=current_map,
-        weather=weather_applied,
-        vehicles_spawned=vehicle_ids,
-        pedestrians_spawned=pedestrian_ids,
+        map=world.get_map().name.split("/")[-1],
+        weather=config.weather,
+        vehicles_spawned=v_ids,
+        pedestrians_spawned=p_ids
     )
 
 
-@app.post("/cleanup", response_model=CleanupResponse)
-async def cleanup():
-    try:
-        result = await asyncio.get_event_loop().run_in_executor(
-            None, lambda: destroy_all_actors(carla_manager.world)
-        )
-        return result
-    except Exception as e:
-        logger.error(f"Cleanup failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/world_info")
-async def world_info():
-    try:
-        world = carla_manager.world
-        actors = world.get_actors()
-        current_map = world.get_map().name.split("/")[-1]
-        weather = world.get_weather()
-        return {
-            "map": current_map,
-            "vehicles": len(actors.filter("vehicle.*")),
-            "pedestrians": len(actors.filter("walker.pedestrian.*")),
-            "sensors": len(actors.filter("sensor.*")),
-            "weather": {
-                "cloudiness": weather.cloudiness,
-                "precipitation": weather.precipitation,
-                "wind_intensity": weather.wind_intensity,
-                "sun_altitude_angle": weather.sun_altitude_angle,
-                "fog_density": weather.fog_density,
-            },
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("simulator_service:app", host="0.0.0.0", port=8502, reload=True, log_level="info")
+    import time # Needed for the map load sleep
+    # Entry point
+    uvicorn.run("simulator_service:app", host="0.0.0.0", port=LISTENING_PORT, log_level="info")

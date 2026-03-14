@@ -143,3 +143,120 @@
 2026-03-12 20:48:27,025 - simulator_service - WARNING - Pedestrian spawn failed: Spawn failed because of collision at spawn position
 2026-03-12 20:48:27,026 - simulator_service - WARNING - Pedestrian spawn failed: Spawn failed because of collision at spawn position
 2026-03-12 20:48:27,660 - simulator_service - INFO - Spawned 4/8 pedestrians with AI controllers
+2026-03-12 20:49:31,002 - simulator_service - INFO - Simulator service shutting down
+2026-03-12 20:49:31,003 - simulator_service - INFO - Disconnected from CARLA
+2026-03-12 20:49:32,533 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-12 20:49:32,533 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:49:32,538 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-12 20:49:51,592 - simulator_service - INFO - Map Town03 already loaded, skipping reload
+2026-03-12 20:50:07,110 - simulator_service - WARNING - Failed to destroy vehicle 123: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:50:21,151 - simulator_service - WARNING - Failed to destroy vehicle 122: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:50:35,202 - simulator_service - WARNING - Failed to destroy vehicle 121: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:50:49,260 - simulator_service - WARNING - Failed to destroy vehicle 120: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:51:03,301 - simulator_service - WARNING - Failed to destroy vehicle 119: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:51:17,346 - simulator_service - WARNING - Failed to destroy vehicle 118: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:51:31,405 - simulator_service - WARNING - Failed to destroy vehicle 117: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:51:45,459 - simulator_service - WARNING - Failed to destroy vehicle 116: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:51:59,496 - simulator_service - WARNING - Failed to destroy vehicle 115: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:52:13,543 - simulator_service - WARNING - Failed to destroy vehicle 114: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:52:27,596 - simulator_service - WARNING - Failed to destroy vehicle 113: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:52:41,639 - simulator_service - WARNING - Failed to destroy vehicle 112: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:52:55,692 - simulator_service - WARNING - Failed to destroy vehicle 111: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:53:09,733 - simulator_service - WARNING - Failed to destroy vehicle 110: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:53:23,784 - simulator_service - WARNING - Failed to destroy vehicle 109: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:53:23,876 - simulator_service - INFO - Cleanup: 0 vehicles, 4 pedestrians, 60 sensors, 4 controllers
+2026-03-12 20:53:23,876 - simulator_service - INFO - Weather set to ClearSunset
+2026-03-12 20:53:37,972 - simulator_service - ERROR - Failed to apply config: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-12 20:54:47,988 - simulator_service - INFO - Simulator service shutting down
+2026-03-12 20:54:48,003 - simulator_service - INFO - Disconnected from CARLA
+2026-03-12 20:55:58,202 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-12 20:55:58,202 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:56:18,207 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-12 20:56:30,276 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-12 20:56:30,284 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-12 20:56:30,931 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-12 20:56:42,217 - simulator_service - INFO - Map Town03 loaded successfully
+2026-03-12 20:56:42,242 - simulator_service - INFO - Cleanup: 0 vehicles, 0 pedestrians, 0 sensors, 0 controllers
+2026-03-12 20:56:42,242 - simulator_service - INFO - Weather set to ClearSunset
+2026-03-12 20:56:52,291 - simulator_service - ERROR - Failed to apply config: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-13 21:59:47,576 - simulator_service - INFO - Simulator service shutting down
+2026-03-13 21:59:47,589 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 22:00:04,959 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-13 22:00:04,959 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 22:00:24,966 - simulator_service - WARNING - Initial CARLA connection failed (will retry on first request): time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-13 22:00:32,047 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 22:00:32,055 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-13 22:00:32,806 - simulator_service - INFO - Loading map Town10 (current: Town10HD_Opt)
+2026-03-13 22:00:32,992 - simulator_service - ERROR - Failed to apply config: Map 'Town10' not found
+2026-03-13 22:06:26,330 - simulator_service - INFO - Simulator service shutting down
+2026-03-13 22:06:26,342 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 22:06:31,405 - simulator_service - INFO - Simulator service starting, CARLA target: localhost:2000
+2026-03-13 22:06:31,405 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 22:06:31,410 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-13 22:07:08,026 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-13 22:07:19,684 - simulator_service - INFO - Map Town03 loaded successfully
+2026-03-13 22:07:19,709 - simulator_service - INFO - Cleanup: 0 vehicles, 0 pedestrians, 0 sensors, 0 controllers
+2026-03-13 22:07:19,710 - simulator_service - INFO - Weather set to ClearSunset
+2026-03-13 22:07:29,755 - simulator_service - ERROR - Failed to apply config: trying to create rpc server for traffic manager; but the system failed to create because of bind error.
+2026-03-13 22:14:08,860 - simulator_service - INFO - Simulator service shutting down
+2026-03-13 22:14:08,870 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 23:33:47,000 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-13 23:33:47,009 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-13 23:33:47,009 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 23:34:07,015 - simulator_service - ERROR - Failed to connect to CARLA on startup: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-13 23:36:40,322 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 23:37:05,059 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-13 23:37:05,068 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-13 23:37:05,068 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 23:37:25,074 - simulator_service - ERROR - Failed to connect to CARLA on startup: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-13 23:39:13,231 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 23:39:30,693 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-13 23:39:30,702 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-13 23:39:30,702 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 23:39:50,707 - simulator_service - ERROR - Failed to connect to CARLA on startup: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-13 23:40:07,866 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 23:40:07,874 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-13 23:40:08,610 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-13 23:40:20,207 - simulator_service - ERROR - Failed to apply config: name 'time' is not defined
+2026-03-13 23:43:00,247 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 23:44:52,779 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-13 23:44:52,787 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-13 23:44:52,787 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 23:45:12,793 - simulator_service - ERROR - Failed to connect to CARLA on startup: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-13 23:46:09,872 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 23:46:09,879 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-13 23:46:10,530 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-13 23:46:22,526 - simulator_service - ERROR - Failed to apply config: name 'time' is not defined
+2026-03-13 23:48:27,592 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 23:48:36,830 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-13 23:48:36,839 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-13 23:48:36,839 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-13 23:48:36,846 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-13 23:48:51,968 - simulator_service - INFO - Map Town03 already loaded, skipping reload
+2026-03-13 23:48:51,998 - simulator_service - INFO - Cleanup finished. Actors destroyed: status='success' vehicles_destroyed=0 pedestrians_destroyed=0 controllers_destroyed=0 sensors_destroyed=0
+2026-03-13 23:48:51,999 - simulator_service - INFO - Weather preset applied: ClearSunset
+2026-03-13 23:48:52,028 - simulator_service - INFO - Initializing Traffic Manager on port 5000
+2026-03-13 23:49:06,504 - simulator_service - INFO - Spawned 15/15 vehicles
+2026-03-13 23:49:16,189 - simulator_service - INFO - Spawned 3/8 pedestrians
+2026-03-13 23:53:36,009 - simulator_service - INFO - Map Town03 already loaded, skipping reload
+2026-03-13 23:55:19,762 - simulator_service - INFO - Cleanup finished. Actors destroyed: status='success' vehicles_destroyed=0 pedestrians_destroyed=3 controllers_destroyed=3 sensors_destroyed=11
+2026-03-13 23:55:19,765 - simulator_service - INFO - Weather preset applied: ClearSunset
+2026-03-13 23:55:29,660 - simulator_service - INFO - Spawned 15/15 vehicles
+2026-03-13 23:55:38,681 - simulator_service - INFO - Spawned 4/8 pedestrians
+2026-03-13 23:55:38,777 - simulator_service - INFO - Disconnected from CARLA
+2026-03-13 23:58:06,553 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-13 23:58:06,562 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-13 23:58:06,562 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-14 00:13:47,186 - simulator_service - INFO - Configured Simulator: Port=8502, TM_Port=5000, CARLA=localhost:2000
+2026-03-14 00:13:47,196 - simulator_service - INFO - Simulator service starting. CARLA target: localhost:2000
+2026-03-14 00:13:47,196 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-14 00:14:07,201 - simulator_service - ERROR - Failed to connect to CARLA on startup: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-03-14 00:14:33,245 - simulator_service - INFO - Connecting to CARLA at localhost:2000
+2026-03-14 00:14:33,253 - simulator_service - INFO - Connected to CARLA server v0.9.16
+2026-03-14 00:14:33,899 - simulator_service - INFO - Loading map Town03 (current: Town10HD_Opt)
+2026-03-14 00:14:47,515 - simulator_service - INFO - Map Town03 loaded successfully
+2026-03-14 00:14:47,526 - simulator_service - INFO - Cleanup finished. Actors destroyed: status='success' vehicles_destroyed=0 pedestrians_destroyed=0 controllers_destroyed=0 sensors_destroyed=0
+2026-03-14 00:14:47,527 - simulator_service - INFO - Weather preset applied: ClearSunset
+2026-03-14 00:14:47,543 - simulator_service - INFO - Initializing Traffic Manager on port 5000
+2026-03-14 00:15:02,835 - simulator_service - INFO - Spawned 15/15 vehicles
+2026-03-14 00:15:10,312 - simulator_service - INFO - Spawned 2/8 pedestrians

@@ -43,9 +43,7 @@ function MetricCard({ icon, bg, label, value }: MetricCardProps) {
   return (
     <Card className="p-4">
       <div className="flex items-center gap-3">
-        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${bg}`}>
-          {icon}
-        </div>
+        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${bg}`}>{icon}</div>
         <div>
           <p className="text-muted-foreground text-sm">{label}</p>
           <p className="text-card-foreground text-2xl font-bold">{value}</p>
@@ -98,8 +96,9 @@ export default function ResultsPage() {
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const NODE_IP = process.env.NEXT_PUBLIC_NODE_IP || 'localhost';
-  const WS_URL = `ws://${NODE_IP}:8000/ws`;
-  const API_URL_SIM = `http://${NODE_IP}:8000`;
+  const SNAPSHOT_PORT = process.env.NEXT_PUBLIC_SNAPSHOT_PORT || '8000';
+  const WS_URL = `ws://${NODE_IP}:${SNAPSHOT_PORT}/ws`;
+  const API_URL_SIM = `http://${NODE_IP}:${SNAPSHOT_PORT}`;
 
   // Load simulation data from sessionStorage
   useEffect(() => {
@@ -183,9 +182,7 @@ export default function ResultsPage() {
 
     const fetchCamera = async () => {
       try {
-        const res = await fetch(
-          `${API_URL_SIM}/snapshot/camera/${selectedVehicle.id}/front_view`
-        );
+        const res = await fetch(`${API_URL_SIM}/snapshot/camera/${selectedVehicle.id}/front_view`);
         if (res.ok) setCameraFeed(await res.json());
       } catch {
         // camera not available
@@ -214,7 +211,10 @@ export default function ResultsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: '#111116' }}>
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: '#111116' }}
+      >
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-600 border-t-gray-300" />
           <span style={{ color: '#9ca3af' }}>Loading simulation...</span>
@@ -245,12 +245,7 @@ export default function ResultsPage() {
             {simulationId}
           </span>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => router.push('/')}
-          className="gap-2"
-        >
+        <Button variant="outline" size="sm" onClick={() => router.push('/')} className="gap-2">
           <ArrowLeft size={14} />
           Back to Chat
         </Button>
@@ -260,7 +255,10 @@ export default function ResultsPage() {
         {/* Config summary bar */}
         <div
           className="mb-6 overflow-hidden rounded-xl"
-          style={{ background: '#0d1117', border: '1px solid rgba(255,255,255,0.06)' }}
+          style={{
+            background: '#0d1117',
+            border: '1px solid rgba(255,255,255,0.06)',
+          }}
         >
           <div
             className="flex items-center justify-between px-4 py-3"
@@ -274,19 +272,24 @@ export default function ResultsPage() {
               <span
                 className="rounded-full px-2 py-0.5 text-xs"
                 style={{
-                  background: simData?.simulator_status === 'success'
-                    ? 'rgba(34,197,94,0.1)'
-                    : 'rgba(234,179,8,0.1)',
+                  background:
+                    simData?.simulator_status === 'success'
+                      ? 'rgba(34,197,94,0.1)'
+                      : 'rgba(234,179,8,0.1)',
                   color: simData?.simulator_status === 'success' ? '#4ade80' : '#facc15',
                 }}
               >
-                {simData?.simulator_status === 'success' ? 'Applied to CARLA' : simData?.simulator_status || 'pending'}
+                {simData?.simulator_status === 'success'
+                  ? 'Applied to CARLA'
+                  : simData?.simulator_status || 'pending'}
               </span>
             </div>
           </div>
           <pre
             className="overflow-x-auto p-4 text-xs leading-relaxed"
-            style={{ fontFamily: "var(--font-geist-mono, 'Geist Mono', monospace)" }}
+            style={{
+              fontFamily: "var(--font-geist-mono, 'Geist Mono', monospace)",
+            }}
             dangerouslySetInnerHTML={{ __html: syntaxHighlight(config) }}
           />
         </div>
@@ -330,11 +333,13 @@ export default function ResultsPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Weather:</span>
-                    <span className="text-card-foreground">{config.weather as string || 'N/A'}</span>
+                    <span className="text-card-foreground">
+                      {(config.weather as string) || 'N/A'}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Map:</span>
-                    <span className="text-card-foreground">{config.map as string || 'N/A'}</span>
+                    <span className="text-card-foreground">{(config.map as string) || 'N/A'}</span>
                   </div>
                 </div>
               </Card>
@@ -358,13 +363,13 @@ export default function ResultsPage() {
                   <div>
                     <div className="text-muted-foreground text-sm">Vehicles</div>
                     <div className="text-card-foreground text-2xl font-bold">
-                      {config.number_of_vehicles as number ?? 'N/A'}
+                      {(config.number_of_vehicles as number) ?? 'N/A'}
                     </div>
                   </div>
                   <div>
                     <div className="text-muted-foreground text-sm">Pedestrians</div>
                     <div className="text-card-foreground text-2xl font-bold">
-                      {config.number_of_pedestrians as number ?? 'N/A'}
+                      {(config.number_of_pedestrians as number) ?? 'N/A'}
                     </div>
                   </div>
                   <div>
@@ -419,7 +424,7 @@ export default function ResultsPage() {
                 </p>
               </div>
               <div className="w-full" style={{ height: '700px' }}>
-                <MapVisualization simulationId={simulationId} wsUrl={WS_URL} />
+                <MapVisualization simulationId={simulationId} />
               </div>
             </Card>
           </TabsContent>
@@ -432,9 +437,11 @@ export default function ResultsPage() {
                   {connectionError ? (
                     <>
                       <AlertCircle className="text-chart-1 mx-auto h-16 w-16" />
-                      <p className="text-muted-foreground">Unable to connect to simulation service</p>
+                      <p className="text-muted-foreground">
+                        Unable to connect to simulation service
+                      </p>
                       <p className="text-muted-foreground/60 text-sm">
-                        Make sure the snapshot service is running at {NODE_IP}:8000
+                        Make sure the snapshot service is running at {NODE_IP}:{SNAPSHOT_PORT}
                       </p>
                     </>
                   ) : (
@@ -450,7 +457,11 @@ export default function ResultsPage() {
                 {/* Control Bar */}
                 <Card className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-4">
-                    <Button onClick={toggleLive} variant={isLive ? 'default' : 'outline'} className="gap-2">
+                    <Button
+                      onClick={toggleLive}
+                      variant={isLive ? 'default' : 'outline'}
+                      className="gap-2"
+                    >
                       {isLive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       {isLive ? 'Pause' : 'Resume'}
                     </Button>
@@ -475,10 +486,34 @@ export default function ResultsPage() {
 
                 {/* Metrics Overview */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                  <MetricCard icon={<Car className="text-chart-2 h-5 w-5" />} bg="bg-chart-2/20" label="Vehicles" value={metrics.total_vehicles || 0} />
-                  <MetricCard icon={<Users className="text-chart-4 h-5 w-5" />} bg="bg-chart-4/20" label="Pedestrians" value={metrics.total_pedestrians || 0} />
-                  <MetricCard icon={<Activity className="text-chart-3 h-5 w-5" />} bg="bg-chart-3/20" label="Avg Speed" value={metrics.average_speed_kmh ? `${metrics.average_speed_kmh.toFixed(0)} km/h` : '0 km/h'} />
-                  <MetricCard icon={<Activity className="text-destructive h-5 w-5" />} bg="bg-destructive/20" label="Collisions" value={metrics.total_collisions || 0} />
+                  <MetricCard
+                    icon={<Car className="text-chart-2 h-5 w-5" />}
+                    bg="bg-chart-2/20"
+                    label="Vehicles"
+                    value={metrics.total_vehicles || 0}
+                  />
+                  <MetricCard
+                    icon={<Users className="text-chart-4 h-5 w-5" />}
+                    bg="bg-chart-4/20"
+                    label="Pedestrians"
+                    value={metrics.total_pedestrians || 0}
+                  />
+                  <MetricCard
+                    icon={<Activity className="text-chart-3 h-5 w-5" />}
+                    bg="bg-chart-3/20"
+                    label="Avg Speed"
+                    value={
+                      metrics.average_speed_kmh
+                        ? `${metrics.average_speed_kmh.toFixed(0)} km/h`
+                        : '0 km/h'
+                    }
+                  />
+                  <MetricCard
+                    icon={<Activity className="text-destructive h-5 w-5" />}
+                    bg="bg-destructive/20"
+                    label="Collisions"
+                    value={metrics.total_collisions || 0}
+                  />
                 </div>
 
                 {/* Vehicles list */}
