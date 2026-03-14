@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Car, Users, Gauge, AlertCircle } from 'lucide-react';
+import { Car, Users, Gauge, AlertCircle, Wifi, WifiOff, MapPin, Activity } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 // ===================== Types =====================
 interface MapBounds {
@@ -47,21 +50,22 @@ interface SnapshotData {
   metrics: Metrics;
 }
 
-// ===================== Theme =====================
-const THEME = {
-  canvasBg:    '#ffffff',
-  road:        '#d1d5db',
-  vehicle:     '#2563eb',
-  vehicleFast: '#d97706',
-  pedestrian:  '#059669',
+// ===================== Colors =====================
+const COLOR = {
+  bg:           0xfafafa,
+  road:         0xd1d5db,
+  vehicle:      0x2563eb,
+  vehicleFast:  0xd97706,
+  vehicleFront: 0xffffff,
+  pedestrian:   0x059669,
 };
 
-const LIGHT_COLORS: Record<string, string> = {
-  red:     '#ef4444',
-  yellow:  '#eab308',
-  green:   '#22c55e',
-  off:     '#d1d5db',
-  unknown: '#9ca3af',
+const LIGHT_COLOR: Record<string, number> = {
+  red:     0xef4444,
+  yellow:  0xeab308,
+  green:   0x22c55e,
+  off:     0xd1d5db,
+  unknown: 0x9ca3af,
 };
 
 // ===================== Helpers =====================
@@ -96,7 +100,7 @@ function boundsFromActors(vehicles: Vehicle[], peds: Pedestrian[], lights: Traff
   return { min_x: min_x - padX, max_x: max_x + padX, min_y: min_y - padY, max_y: max_y + padY };
 }
 
-function worldToScreen(wx: number, wy: number, b: MapBounds, w: number, h: number) {
+function worldToPixi(wx: number, wy: number, b: MapBounds, w: number, h: number) {
   const scale = Math.min((w - 80) / (b.max_x - b.min_x), (h - 80) / (b.max_y - b.min_y));
   const ox = (w - (b.max_x - b.min_x) * scale) / 2;
   const oy = (h - (b.max_y - b.min_y) * scale) / 2;
@@ -108,207 +112,307 @@ function worldToScreen(wx: number, wy: number, b: MapBounds, w: number, h: numbe
 
 // ===================== Main Component =====================
 export default function MapVisualization({ simulationId }: { simulationId: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const snapshotRef = useRef<SnapshotData | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pixiAppRef = useRef<any>(null);
+  const layersRef = useRef<{ roads: any; lights: any; pedestrians: any; vehicles: any } | null>(null);
+  const vehicleGfxRef = useRef<Map<number, any>>(new Map());
+  const pedestrianGfxRef = useRef<Map<number, any>>(new Map());
+  const lightGfxRef = useRef<Map<number, any>>(new Map());
   const boundsRef = useRef<MapBounds | null>(null);
   const mapDataRef = useRef<MapData | null>(null);
-  const rafRef = useRef<number | null>(null);
+
   const [isConnected, setIsConnected] = useState(false);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [mapName, setMapName] = useState<string | null>(null);
+  const [fps, setFps] = useState(0);
 
   useEffect(() => {
     const IP = process.env.NEXT_PUBLIC_NODE_IP || 'localhost';
     const PORT = process.env.NEXT_PUBLIC_SNAPSHOT_PORT || '8000';
     const API = `http://${IP}:${PORT}`;
 
-    // -- Fetch road topology once --
-    fetch(`${API}/map_data`)
-      .then(r => r.json())
-      .then((data: MapData) => {
-        mapDataRef.current = data;
-        boundsRef.current = boundsFromRoads(data.roads);
-        setMapName(data.map_name);
-      })
-      .catch(() => {
-        // map_data unavailable — bounds fall back to actor positions
+    let destroyed = false;
+    let ws: WebSocket | null = null;
+    let handleResize: (() => void) | null = null;
+
+    const drawRoads = (app: any, PIXI: any) => {
+      const roads = mapDataRef.current?.roads ?? [];
+      const b = boundsRef.current;
+      const layer = layersRef.current?.roads;
+      if (!layer || !b || roads.length === 0) return;
+      const W = app.renderer.width;
+      const H = app.renderer.height;
+      layer.clear();
+      layer.setStrokeStyle({ width: 3, color: COLOR.road, cap: 'round', join: 'round' });
+      roads.forEach(road => {
+        const s = worldToPixi(road.start.x, road.start.y, b, W, H);
+        const e = worldToPixi(road.end.x,   road.end.y,   b, W, H);
+        layer.moveTo(s.x, s.y).lineTo(e.x, e.y);
+      });
+      layer.stroke();
+    };
+
+    const init = async () => {
+      const PIXI = await import('pixi.js');
+      if (destroyed || !containerRef.current) return;
+
+      const w = containerRef.current.clientWidth;
+      const h = containerRef.current.clientHeight;
+
+      const app = new PIXI.Application();
+      await app.init({
+        width: w,
+        height: h,
+        background: COLOR.bg,
+        antialias: true,
+        preference: 'webgpu',
+        resolution: window.devicePixelRatio || 1,
+        autoDensity: true,
       });
 
-    // -- WebSocket for live actor data --
-    const ws = new WebSocket(`ws://${IP}:${PORT}/ws`);
-    ws.onopen = () => setIsConnected(true);
-    ws.onclose = () => setIsConnected(false);
-    ws.onmessage = (e) => {
-      try {
-        const data: SnapshotData = JSON.parse(e.data);
-        snapshotRef.current = data;
-        // Only use actor-based bounds if road data hasn't loaded yet
-        if (!mapDataRef.current) {
-          boundsRef.current = boundsFromActors(data.vehicles, data.pedestrians, data.traffic_lights);
-        }
-        setMetrics(data.metrics);
-      } catch {}
+      if (destroyed) { app.destroy(true); return; }
+
+      containerRef.current.appendChild(app.canvas);
+      pixiAppRef.current = app;
+
+      const roadLayer = new PIXI.Graphics();
+      const lightLayer = new PIXI.Container();
+      const pedLayer   = new PIXI.Container();
+      const vehLayer   = new PIXI.Container();
+      app.stage.addChild(roadLayer, lightLayer, pedLayer, vehLayer);
+      layersRef.current = { roads: roadLayer, lights: lightLayer, pedestrians: pedLayer, vehicles: vehLayer };
+
+      // FPS counter
+      app.ticker.add(() => setFps(Math.round(app.ticker.FPS)));
+
+      // Resize
+      handleResize = () => {
+        if (!containerRef.current || !pixiAppRef.current) return;
+        const nw = containerRef.current.clientWidth;
+        const nh = containerRef.current.clientHeight;
+        pixiAppRef.current.renderer.resize(nw, nh);
+        drawRoads(pixiAppRef.current, PIXI);
+      };
+      window.addEventListener('resize', handleResize);
+
+      // Fetch road topology
+      fetch(`${API}/map_data`)
+        .then(r => r.json())
+        .then((data: MapData) => {
+          if (destroyed) return;
+          mapDataRef.current = data;
+          boundsRef.current = boundsFromRoads(data.roads);
+          setMapName(data.map_name);
+          drawRoads(app, PIXI);
+        })
+        .catch(() => {});
+
+      // WebSocket
+      ws = new WebSocket(`ws://${IP}:${PORT}/ws`);
+      ws.onopen = () => setIsConnected(true);
+      ws.onclose = () => setIsConnected(false);
+
+      ws.onmessage = (e) => {
+        if (destroyed) return;
+        try {
+          const data: SnapshotData = JSON.parse(e.data);
+          setMetrics(data.metrics);
+
+          if (!mapDataRef.current) {
+            boundsRef.current = boundsFromActors(data.vehicles, data.pedestrians, data.traffic_lights);
+          }
+
+          const b = boundsRef.current;
+          if (!b || !layersRef.current || !pixiAppRef.current) return;
+
+          const W = pixiAppRef.current.renderer.width;
+          const H = pixiAppRef.current.renderer.height;
+
+          // -- Vehicles --
+          const seenV = new Set<number>();
+          data.vehicles.forEach(v => {
+            seenV.add(v.id);
+            const pos = worldToPixi(v.position.x, v.position.y, b, W, H);
+            const fast = v.velocity.speed_kmh > 40;
+
+            let gfx = vehicleGfxRef.current.get(v.id);
+            if (!gfx) {
+              gfx = new PIXI.Graphics();
+              layersRef.current!.vehicles.addChild(gfx);
+              vehicleGfxRef.current.set(v.id, gfx);
+            }
+            gfx.clear();
+            gfx.roundRect(-5, -9, 10, 18, 2);
+            gfx.fill(fast ? COLOR.vehicleFast : COLOR.vehicle);
+            gfx.circle(0, -6, 2);
+            gfx.fill(COLOR.vehicleFront);
+            gfx.x = pos.x;
+            gfx.y = pos.y;
+            gfx.rotation = ((90 - v.rotation.yaw) * Math.PI) / 180;
+          });
+          vehicleGfxRef.current.forEach((gfx, id) => {
+            if (!seenV.has(id)) {
+              layersRef.current!.vehicles.removeChild(gfx);
+              gfx.destroy();
+              vehicleGfxRef.current.delete(id);
+            }
+          });
+
+          // -- Pedestrians --
+          const seenP = new Set<number>();
+          data.pedestrians.forEach(p => {
+            seenP.add(p.id);
+            const pos = worldToPixi(p.position.x, p.position.y, b, W, H);
+            let gfx = pedestrianGfxRef.current.get(p.id);
+            if (!gfx) {
+              gfx = new PIXI.Graphics();
+              layersRef.current!.pedestrians.addChild(gfx);
+              pedestrianGfxRef.current.set(p.id, gfx);
+            }
+            gfx.clear();
+            gfx.circle(0, 0, 4);
+            gfx.fill(COLOR.pedestrian);
+            gfx.x = pos.x;
+            gfx.y = pos.y;
+          });
+          pedestrianGfxRef.current.forEach((gfx, id) => {
+            if (!seenP.has(id)) {
+              layersRef.current!.pedestrians.removeChild(gfx);
+              gfx.destroy();
+              pedestrianGfxRef.current.delete(id);
+            }
+          });
+
+          // -- Traffic lights --
+          const seenL = new Set<number>();
+          (data.traffic_lights || []).forEach(l => {
+            seenL.add(l.id);
+            const pos = worldToPixi(l.position.x, l.position.y, b, W, H);
+            const col = LIGHT_COLOR[l.state] ?? LIGHT_COLOR.unknown;
+            let gfx = lightGfxRef.current.get(l.id);
+            if (!gfx) {
+              gfx = new PIXI.Graphics();
+              layersRef.current!.lights.addChild(gfx);
+              lightGfxRef.current.set(l.id, gfx);
+            }
+            gfx.clear();
+            gfx.circle(0, 0, 5);
+            gfx.fill(col);
+            gfx.x = pos.x;
+            gfx.y = pos.y;
+          });
+          lightGfxRef.current.forEach((gfx, id) => {
+            if (!seenL.has(id)) {
+              layersRef.current!.lights.removeChild(gfx);
+              gfx.destroy();
+              lightGfxRef.current.delete(id);
+            }
+          });
+
+        } catch {}
+      };
     };
 
-    // -- Resize --
-    const handleResize = () => {
-      const canvas = canvasRef.current;
-      if (canvas?.parentElement) {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    // -- Render loop defined inside useEffect so it closes over refs correctly --
-    const render = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      const { width: w, height: h } = canvas;
-      const b = boundsRef.current;
-      const data = snapshotRef.current;
-
-      ctx.fillStyle = THEME.canvasBg;
-      ctx.fillRect(0, 0, w, h);
-
-      if (!b) {
-        rafRef.current = requestAnimationFrame(render);
-        return;
-      }
-
-      // 1. Roads
-      const roads = mapDataRef.current?.roads ?? [];
-      if (roads.length > 0) {
-        ctx.strokeStyle = THEME.road;
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        roads.forEach(road => {
-          const s = worldToScreen(road.start.x, road.start.y, b, w, h);
-          const e = worldToScreen(road.end.x,   road.end.y,   b, w, h);
-          ctx.moveTo(s.x, s.y);
-          ctx.lineTo(e.x, e.y);
-        });
-        ctx.stroke();
-      }
-
-      if (data) {
-        // 2. Traffic lights
-        (data.traffic_lights || []).forEach(l => {
-          const p = worldToScreen(l.position.x, l.position.y, b, w, h);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-          ctx.fillStyle = LIGHT_COLORS[l.state] || LIGHT_COLORS.unknown;
-          ctx.fill();
-          ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        });
-
-        // 3. Pedestrians
-        data.pedestrians.forEach(ped => {
-          const p = worldToScreen(ped.position.x, ped.position.y, b, w, h);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-          ctx.fillStyle = THEME.pedestrian;
-          ctx.fill();
-        });
-
-        // 4. Vehicles — oriented rectangles with a direction dot
-        data.vehicles.forEach(v => {
-          const p = worldToScreen(v.position.x, v.position.y, b, w, h);
-          const fast = v.velocity.speed_kmh > 40;
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(((90 - v.rotation.yaw) * Math.PI) / 180);
-          ctx.beginPath();
-          ctx.roundRect(-5, -9, 10, 18, 2);
-          ctx.fillStyle = fast ? THEME.vehicleFast : THEME.vehicle;
-          ctx.fill();
-          // Front indicator dot
-          ctx.beginPath();
-          ctx.arc(0, -6, 2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,255,255,0.8)';
-          ctx.fill();
-          ctx.restore();
-        });
-      }
-
-      rafRef.current = requestAnimationFrame(render);
-    };
-
-    rafRef.current = requestAnimationFrame(render);
+    init();
 
     return () => {
-      ws.close();
-      window.removeEventListener('resize', handleResize);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      destroyed = true;
+      if (ws) ws.close();
+      if (handleResize) window.removeEventListener('resize', handleResize);
+      if (pixiAppRef.current) {
+        pixiAppRef.current.destroy(true, { children: true });
+        pixiAppRef.current = null;
+      }
     };
   }, []);
 
   return (
-    <div className="relative h-full w-full rounded-xl bg-white">
-      <canvas ref={canvasRef} className="h-full w-full" />
+    <div className="relative h-full w-full overflow-hidden rounded-xl bg-[#fafafa]">
+      <div ref={containerRef} className="h-full w-full" />
 
-      {/* Connection status + map name */}
-      <div className="absolute left-3 top-3 flex items-center gap-2">
-        <div className="flex items-center gap-1.5 rounded-md border bg-white/90 px-2 py-1 shadow-sm">
-          <div className={`h-1.5 w-1.5 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-400'}`} />
-          <span className="text-xs text-gray-500">{isConnected ? 'Live' : 'Disconnected'}</span>
-        </div>
-        {mapName && (
-          <div className="rounded-md border bg-white/90 px-2 py-1 shadow-sm">
-            <span className="text-xs text-gray-500">{mapName}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Metrics */}
-      {metrics && (
-        <div className="absolute bottom-3 left-3 flex gap-2">
-          <div className="flex items-center gap-1.5 rounded-md border bg-white/90 px-2 py-1 shadow-sm">
-            <Car size={12} className="text-gray-400" />
-            <span className="text-xs text-gray-600">{metrics.total_vehicles}</span>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-md border bg-white/90 px-2 py-1 shadow-sm">
-            <Users size={12} className="text-gray-400" />
-            <span className="text-xs text-gray-600">{metrics.total_pedestrians}</span>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-md border bg-white/90 px-2 py-1 shadow-sm">
-            <Gauge size={12} className="text-gray-400" />
-            <span className="text-xs text-gray-600">{metrics.average_speed_kmh?.toFixed(0)} km/h</span>
-          </div>
-          {metrics.total_collisions > 0 && (
-            <div className="flex items-center gap-1.5 rounded-md border border-red-200 bg-red-50/90 px-2 py-1 shadow-sm">
-              <AlertCircle size={12} className="text-red-400" />
-              <span className="text-xs text-red-500">{metrics.total_collisions}</span>
-            </div>
+      {/* Top bar */}
+      <div className="pointer-events-none absolute left-0 right-0 top-0 flex items-center justify-between px-3 py-2">
+        <div className="flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className={`pointer-events-auto gap-1.5 bg-white/90 shadow-sm ${
+              isConnected ? 'border-green-200 text-green-600' : 'border-red-200 text-red-500'
+            }`}
+          >
+            {isConnected ? <Wifi size={11} /> : <WifiOff size={11} />}
+            {isConnected ? 'Live' : 'Disconnected'}
+          </Badge>
+          {mapName && (
+            <Badge variant="outline" className="gap-1.5 bg-white/90 shadow-sm">
+              <MapPin size={11} />
+              {mapName}
+            </Badge>
           )}
         </div>
+        <Badge variant="outline" className="gap-1.5 bg-white/90 font-mono shadow-sm">
+          <Activity size={11} />
+          {fps} fps
+        </Badge>
+      </div>
+
+      {/* Metrics panel */}
+      {metrics && (
+        <Card className="absolute right-3 top-10 w-44 overflow-hidden bg-white/95 p-0 shadow-md">
+          <div className="border-b px-3 py-2">
+            <p className="text-xs font-semibold text-foreground">Live Metrics</p>
+          </div>
+          <div className="divide-y">
+            {[
+              { icon: <Car size={11} />,         label: 'Vehicles',    value: metrics.total_vehicles },
+              { icon: <Users size={11} />,        label: 'Pedestrians', value: metrics.total_pedestrians },
+              { icon: <Gauge size={11} />,        label: 'Avg Speed',   value: `${metrics.average_speed_kmh.toFixed(1)} km/h` },
+              { icon: <Gauge size={11} />,        label: 'Max Speed',   value: `${metrics.max_speed_kmh.toFixed(1)} km/h` },
+              ...(metrics.traffic_density != null
+                ? [{ icon: <Activity size={11} />, label: 'Density', value: metrics.traffic_density.toFixed(1) }]
+                : []),
+              { icon: <AlertCircle size={11} />,  label: 'Collisions',  value: metrics.total_collisions, highlight: metrics.total_collisions > 0 },
+            ].map(({ icon, label, value, highlight }) => (
+              <div key={label} className="flex items-center justify-between px-3 py-2">
+                <div className="flex items-center gap-1.5 text-muted-foreground">
+                  {icon}
+                  <span className="text-xs">{label}</span>
+                </div>
+                <span className={`text-xs font-semibold tabular-nums ${highlight ? 'text-destructive' : 'text-foreground'}`}>
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Card>
       )}
 
       {/* Legend */}
-      <div className="absolute bottom-3 right-3 flex flex-col gap-1 rounded-md border bg-white/90 px-3 py-2 shadow-sm">
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-3 rounded-sm" style={{ background: THEME.vehicle }} />
-          <span className="text-xs text-gray-500">Vehicle</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-3 rounded-sm" style={{ background: THEME.vehicleFast }} />
-          <span className="text-xs text-gray-500">Fast (&gt;40 km/h)</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full" style={{ background: THEME.pedestrian }} />
-          <span className="text-xs text-gray-500">Pedestrian</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="h-2 w-3 rounded-sm" style={{ background: THEME.road }} />
-          <span className="text-xs text-gray-500">Road</span>
-        </div>
+      <div className="absolute bottom-3 left-3">
+        <Card className="flex items-center gap-3 bg-white/95 px-3 py-2 shadow-sm">
+          {[
+            { color: '#2563eb', label: 'Vehicle',    shape: 'rect' },
+            { color: '#d97706', label: '>40 km/h',   shape: 'rect' },
+            { color: '#059669', label: 'Pedestrian', shape: 'circle' },
+          ].map(({ color, label, shape }, i) => (
+            <div key={label} className="flex items-center gap-1.5">
+              {i > 0 && <Separator orientation="vertical" className="h-3" />}
+              <div
+                className={shape === 'circle' ? 'h-2.5 w-2.5 rounded-full' : 'h-2.5 w-4 rounded-sm'}
+                style={{ background: color }}
+              />
+              <span className="text-xs text-muted-foreground">{label}</span>
+            </div>
+          ))}
+          <Separator orientation="vertical" className="h-3" />
+          <div className="flex items-center gap-1.5">
+            <div className="flex gap-0.5">
+              {['#22c55e', '#eab308', '#ef4444'].map(c => (
+                <div key={c} className="h-2.5 w-2.5 rounded-full" style={{ background: c }} />
+              ))}
+            </div>
+            <span className="text-xs text-muted-foreground">Lights</span>
+          </div>
+        </Card>
       </div>
     </div>
   );
