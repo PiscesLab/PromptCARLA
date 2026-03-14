@@ -1,6 +1,6 @@
 # PromptCarla
 
-**PromptCarla** is an agentic digital twin simulation platform that translates natural language traffic scenario descriptions into structured CARLA simulator configurations using multiple large language models in parallel. The system supports real-time simulation monitoring through a web-based dashboard with live 2D map visualisation, vehicle telemetry, and traffic metrics.
+**PromptCarla** is a research platform that investigates the use of large language models for translating natural language traffic scenario descriptions into structured configuration files for the CARLA autonomous driving simulator. The system evaluates four LLMs in parallel — Gemini 2.5 Flash, Claude Sonnet 4, GPT-4.1 Mini, and DeepSeek V3 — on their ability to accurately interpret and encode scenario semantics into validated simulator parameters.
 
 This project was developed as part of research submitted to **ACM CAIS 2026**.
 
@@ -20,15 +20,17 @@ This project was developed as part of research submitted to **ACM CAIS 2026**.
 
 ## Overview
 
-PromptCarla addresses the challenge of configuring traffic simulations through natural language. A user describes a traffic scenario in plain English (e.g., *"heavy rain downtown, 20 vehicles, low visibility"*); the system queries four LLMs simultaneously — Gemini 2.5 Flash, Claude Sonnet 4, GPT-4.1 Mini, and DeepSeek V3 — each producing a validated CARLA configuration. The user selects a configuration to apply to a running CARLA instance, and the resulting simulation is streamed live to a web dashboard.
+Configuring traffic simulations traditionally requires manual authoring of structured parameter files, demanding familiarity with simulator-specific schemas. PromptCarla investigates whether LLMs can reliably bridge natural language and simulator configuration, enabling researchers and practitioners to describe scenarios in plain English.
+
+A user submits a scenario description (e.g., *"heavy rain downtown, 20 vehicles, low visibility"*); the system dispatches the prompt concurrently to four LLMs, each producing a Pydantic-validated `CarlaConfig` JSON object. Results are presented side-by-side with per-model latency, token usage, and validation status, allowing direct comparison of model outputs. A selected configuration can then be applied to a running CARLA instance, with the resulting simulation streamed live to a monitoring dashboard.
 
 **Key capabilities:**
 
-- Natural language to structured CARLA configuration via multi-model parallel inference
-- Pydantic-validated configuration schema with automatic constraint correction
+- Natural language to validated CARLA configuration via multi-model parallel inference
+- Pydantic-based schema validation with automatic constraint correction
+- Per-model reporting of latency, token usage, and validation status for comparative evaluation
 - Real-time 2D simulation map rendered with PixiJS v8 (WebGPU-accelerated)
 - Live actor telemetry streamed over WebSocket at 20 Hz
-- Per-model latency, token usage, and validation status reporting
 - Docker Compose deployment across four isolated services
 
 ---
