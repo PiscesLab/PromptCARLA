@@ -9062,3 +9062,27 @@
 2026-03-14 02:06:31,063 - agent_service - INFO - RESP GET /health status=200 latency=2.2ms
 2026-03-14 02:06:41,055 - agent_service - INFO - REQ  GET /health client=146.75.146.147
 2026-03-14 02:06:41,057 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 02:06:51,054 - agent_service - INFO - REQ  GET /health client=146.75.146.147
+2026-03-14 02:06:51,056 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 02:07:01,055 - agent_service - INFO - REQ  GET /health client=146.75.146.147
+2026-03-14 02:07:01,057 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 02:07:11,057 - agent_service - INFO - REQ  GET /health client=146.75.146.147
+2026-03-14 02:07:11,058 - agent_service - INFO - RESP GET /health status=200 latency=1.6ms
+2026-03-14 02:07:17,635 - agent_service - INFO - CARLA Configuration Agent Service shutting down
+2026-03-14 02:07:42,094 - agent_service - INFO - Model initialized: gemini-2.5-flash
+2026-03-14 02:07:42,094 - agent_service - INFO - Model initialized: claude-sonnet-4
+2026-03-14 02:07:42,658 - agent_service - INFO - Model initialized: gpt-4.1-mini
+2026-03-14 02:07:42,707 - agent_service - INFO - Model initialized: deepseek-v3
+2026-03-14 02:07:42,716 - agent_service - INFO - CARLA Configuration Agent Service started
+2026-03-14 02:07:42,716 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
+2026-03-14 02:07:42,716 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-14 02:07:51,072 - agent_service - INFO - REQ  GET /health client=146.75.146.146
+2026-03-14 02:07:51,073 - agent_service - INFO - RESP GET /health status=200 latency=1.6ms
+2026-03-14 02:07:58,844 - agent_service - INFO - REQ  GET /health client=146.75.146.146
+2026-03-14 02:07:58,845 - agent_service - INFO - RESP GET /health status=200 latency=1.3ms
+2026-03-14 02:08:08,842 - agent_service - INFO - REQ  GET /health client=146.75.146.146
+2026-03-14 02:08:08,844 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 02:08:18,832 - agent_service - INFO - REQ  GET /health client=146.75.146.146
+2026-03-14 02:08:18,834 - agent_service - INFO - RESP GET /health status=200 latency=1.7ms
+2026-03-14 02:08:28,922 - agent_service - INFO - REQ  GET /health client=146.75.146.146
+2026-03-14 02:08:28,924 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
