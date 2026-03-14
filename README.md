@@ -1,8 +1,7 @@
 # PromptCarla
 
-**PromptCarla** is a research platform that investigates the use of large language models for translating natural language traffic scenario descriptions into structured configuration files for the CARLA autonomous driving simulator. The system evaluates four LLMs in parallel — Gemini 2.5 Flash, Claude Sonnet 4, GPT-4.1 Mini, and DeepSeek V3 — on their ability to accurately interpret and encode scenario semantics into validated simulator parameters.
+**PromptCarla** is a prompt-to-config agent that investigates the use of large language models for translating natural language traffic scenario descriptions into structured configuration files for the CARLA autonomous driving simulator. The system evaluates four LLMs in parallel — Gemini 2.5 Flash, Claude Sonnet 4, GPT-4.1 Mini, and DeepSeek V3 — on their ability to accurately interpret and encode scenario semantics into validated simulator parameters.
 
-This project was developed as part of research submitted to **ACM CAIS 2026**.
 
 ---
 
