@@ -9,6 +9,7 @@ This project was developed as part of research submitted to **ACM CAIS 2026**.
 ## Table of Contents
 
 - [Overview](#overview)
+- [Live Demo](#live-demo)
 - [Architecture](#architecture)
 - [Services](#services)
 - [Setup and Installation](#setup-and-installation)
@@ -32,6 +33,14 @@ A user submits a scenario description (e.g., *"heavy rain downtown, 20 vehicles,
 - Real-time 2D simulation map rendered with PixiJS v8 (WebGPU-accelerated)
 - Live actor telemetry streamed over WebSocket at 20 Hz
 - Docker Compose deployment across four isolated services
+
+---
+
+## Live Demo
+
+A live deployment of PromptCarla is accessible at:
+
+[Live Demo](http://128.105.144.61:3000)
 
 ---
 
@@ -407,4 +416,3 @@ This project was developed at **San Diego State University** as part of ongoing 
 
 ---
 
-*For questions or issues related to this research, please open a GitHub issue or contact the corresponding author.*
