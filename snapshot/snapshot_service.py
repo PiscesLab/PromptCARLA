@@ -1,6 +1,6 @@
 """
 CARLA Snapshot Service
-Fixed for WebSocket support, Frontend Health Checks, and Traffic Light Data
+Fixed for WebSocket support, Frontend Health Checks, Traffic Light Data, and Map Data
 """
 
 import os
@@ -40,6 +40,7 @@ class SimulationState:
         self.tracked_actors: Set[int] = set()
         self.collision_count = 0
         self.connections: Set[WebSocket] = set()
+        self.map_data: Optional[Dict] = None  # cached on first fetch
 
 state = SimulationState()
 
@@ -59,7 +60,6 @@ def extract_vehicle_data(v) -> Dict:
 
 def extract_light_data(l) -> Dict:
     loc = l.get_location()
-    # Map CARLA states to frontend THEME strings
     state_map = {
         carla.TrafficLightState.Red: "red",
         carla.TrafficLightState.Yellow: "yellow",
@@ -73,6 +73,27 @@ def extract_light_data(l) -> Dict:
         "state": state_map.get(l.state, "unknown")
     }
 
+def build_map_data(carla_map) -> Dict:
+    """Extract road topology and spawn points from the CARLA map. Cached after first call."""
+    topology = carla_map.get_topology()
+    roads = []
+    for seg in topology:
+        start = seg[0].transform.location
+        end = seg[1].transform.location
+        roads.append({
+            "start": {"x": start.x, "y": start.y},
+            "end":   {"x": end.x,   "y": end.y},
+        })
+
+    spawn_points = carla_map.get_spawn_points()
+    spawns = [{"x": sp.location.x, "y": sp.location.y} for sp in spawn_points]
+
+    return {
+        "map_name": carla_map.name,
+        "roads": roads,
+        "spawn_points": spawns,
+    }
+
 # ===================== 3. Core Loop =====================
 
 async def update_snapshots():
@@ -83,13 +104,14 @@ async def update_snapshots():
                 state.client = carla.Client(CARLA_HOST, CARLA_PORT)
                 state.client.set_timeout(CARLA_TIMEOUT)
                 state.world = state.client.get_world()
+                state.map_data = None  # reset map cache on reconnect
                 logger.info("Connected successfully.")
 
             actors = state.world.get_actors()
             vehicles = actors.filter("vehicle.*")
             pedestrians = actors.filter("walker.pedestrian.*")
             lights = actors.filter("traffic.traffic_light")
-            
+
             v_list = [extract_vehicle_data(v) for v in vehicles]
             p_list = [{"id": p.id, "position": {"x": p.get_location().x, "y": p.get_location().y, "z": p.get_location().z}, "velocity": {"speed": 1.0}, "heading": 0} for p in pedestrians]
             l_list = [extract_light_data(l) for l in lights]
@@ -102,7 +124,7 @@ async def update_snapshots():
                 "traffic_density": min((len(v_list) / 50.0) * 10.0, 10.0),
                 "total_collisions": state.collision_count
             }
-            
+
             snapshot = {
                 "timestamp": time.time(),
                 "vehicles": v_list,
@@ -112,7 +134,7 @@ async def update_snapshots():
             }
 
             state.current_snapshot = snapshot
-            
+
             if state.connections:
                 msg = json.dumps(snapshot)
                 disconnected = set()
@@ -127,7 +149,7 @@ async def update_snapshots():
 
         except Exception as e:
             logger.error(f"CARLA Sync Error: {e}")
-            state.world = None 
+            state.world = None
             await asyncio.sleep(2)
 
 # ===================== 4. API Endpoints =====================
@@ -146,6 +168,17 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 async def health_check():
     return {"status": "online", "carla_connected": state.world is not None}
 
+@app.get("/map_data")
+async def get_map_data():
+    if not state.world:
+        raise HTTPException(status_code=503, detail="CARLA not connected")
+    # Return cached map data — topology doesn't change during a session
+    if not state.map_data:
+        carla_map = state.world.get_map()
+        state.map_data = build_map_data(carla_map)
+        logger.info(f"Map data built: {len(state.map_data['roads'])} road segments")
+    return state.map_data
+
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
     await ws.accept()
@@ -156,7 +189,8 @@ async def websocket_endpoint(ws: WebSocket):
     except WebSocketDisconnect:
         state.connections.remove(ws)
     except Exception:
-        if ws in state.connections: state.connections.remove(ws)
+        if ws in state.connections:
+            state.connections.remove(ws)
 
 if __name__ == "__main__":
     import uvicorn

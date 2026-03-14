@@ -8854,3 +8854,91 @@
 2026-03-14 01:43:12,344 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
 2026-03-14 01:43:22,439 - agent_service - INFO - REQ  GET /health client=172.226.3.251
 2026-03-14 01:43:22,441 - agent_service - INFO - RESP GET /health status=200 latency=1.7ms
+2026-03-14 01:43:49,525 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:43:49,526 - agent_service - INFO - RESP GET /health status=200 latency=0.8ms
+2026-03-14 01:44:09,586 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:44:09,587 - agent_service - INFO - RESP GET /health status=200 latency=0.9ms
+2026-03-14 01:44:49,695 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:44:49,697 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 01:45:30,201 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:45:30,203 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 01:46:49,823 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:46:49,825 - agent_service - INFO - RESP GET /health status=200 latency=2.3ms
+2026-03-14 01:48:30,003 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:48:30,005 - agent_service - INFO - RESP GET /health status=200 latency=2.2ms
+2026-03-14 01:50:10,261 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:50:10,263 - agent_service - INFO - RESP GET /health status=200 latency=2.2ms
+2026-03-14 01:50:13,667 - agent_service - INFO - CARLA Configuration Agent Service shutting down
+2026-03-14 01:51:37,191 - agent_service - INFO - Model initialized: gemini-2.5-flash
+2026-03-14 01:51:37,191 - agent_service - INFO - Model initialized: claude-sonnet-4
+2026-03-14 01:51:37,738 - agent_service - INFO - Model initialized: gpt-4.1-mini
+2026-03-14 01:51:37,787 - agent_service - INFO - Model initialized: deepseek-v3
+2026-03-14 01:51:37,796 - agent_service - INFO - CARLA Configuration Agent Service started
+2026-03-14 01:51:37,796 - agent_service - INFO - Available models: ['gemini-2.5-flash', 'claude-sonnet-4', 'gpt-4.1-mini', 'deepseek-v3']
+2026-03-14 01:51:37,796 - agent_service - INFO - CARLA endpoint: http://localhost:8502/apply_config
+2026-03-14 01:51:37,936 - agent_service - INFO - REQ  GET /health client=70.95.150.38
+2026-03-14 01:51:37,937 - agent_service - INFO - RESP GET /health status=200 latency=1.5ms
+2026-03-14 01:51:40,023 - agent_service - INFO - REQ  GET /health client=70.95.150.38
+2026-03-14 01:51:40,025 - agent_service - INFO - RESP GET /health status=200 latency=2.0ms
+2026-03-14 01:51:41,393 - agent_service - INFO - REQ  GET /health client=70.95.150.38
+2026-03-14 01:51:41,395 - agent_service - INFO - RESP GET /health status=200 latency=1.7ms
+2026-03-14 01:51:48,619 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:51:48,621 - agent_service - INFO - RESP GET /health status=200 latency=1.7ms
+2026-03-14 01:51:58,623 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:51:58,625 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 01:52:03,420 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:52:03,422 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 01:52:07,813 - agent_service - INFO - REQ  OPTIONS /generate_config client=172.226.3.251
+2026-03-14 01:52:07,814 - agent_service - INFO - RESP OPTIONS /generate_config status=200 latency=1.3ms
+2026-03-14 01:52:07,985 - agent_service - INFO - REQ  POST /generate_config client=172.226.3.251 body={"prompt": "i want light traffic in the evening", "simulator": "carla"}
+2026-03-14 01:52:07,993 - agent_service - INFO - Processing request from user e6f3fab0-5f24-4772-9f53-e0edb4fb68f2: i want light traffic in the evening
+2026-03-14 01:52:08,636 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:52:09,608 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-14 01:52:09,682 - agent_service - INFO - [claude-sonnet-4] latency=1685.3ms tokens={'input_tokens': 484, 'output_tokens': 64, 'total_tokens': 548} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-14 01:52:10,052 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-14 01:52:10,088 - agent_service - INFO - [gpt-4.1-mini] latency=2089.6ms tokens={'input_tokens': 412, 'output_tokens': 51, 'total_tokens': 463} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 80, "number_of_vehicles": 10, "number_of_pedestrians": 5}
+2026-03-14 01:52:11,120 - agent_service - INFO - [deepseek-v3] latency=3120.0ms tokens={'input_tokens': 420, 'output_tokens': 53, 'total_tokens': 473} valid=True config={"weather": "ClearSunset", "map": "Town02", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 10}
+2026-03-14 01:52:13,082 - agent_service - INFO - [gemini-2.5-flash] latency=5088.1ms tokens={'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0} valid=True config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 100, "number_of_vehicles": 40, "number_of_pedestrians": 20}
+2026-03-14 01:52:13,083 - agent_service - INFO - Completed sim_0df32153 for user e6f3fab0-5f24-4772-9f53-e0edb4fb68f2 total_latency=5089.6ms models=4
+2026-03-14 01:52:13,085 - agent_service - INFO - RESP POST /generate_config status=200 latency=5194.0ms
+2026-03-14 01:52:13,415 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:52:13,417 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 01:52:19,717 - agent_service - INFO - REQ  OPTIONS /apply_config client=172.226.3.251
+2026-03-14 01:52:19,719 - agent_service - INFO - RESP OPTIONS /apply_config status=200 latency=1.4ms
+2026-03-14 01:52:19,797 - agent_service - INFO - REQ  POST /apply_config client=172.226.3.251 body={"config": {"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}, "model_name": "claude-sonnet-4"}
+2026-03-14 01:52:19,803 - agent_service - INFO - Applying config sim_06610e98 to CARLA model=claude-sonnet-4 config={"weather": "ClearSunset", "map": "Town03", "time_of_day": null, "visibility": 85, "number_of_vehicles": 15, "number_of_pedestrians": 8}
+2026-03-14 01:52:19,804 - agent_service - INFO - Sending config to CARLA: {'weather': 'ClearSunset', 'map': 'Town03', 'number_of_vehicles': 15, 'number_of_pedestrians': 8, 'visibility': 85}
+2026-03-14 01:52:23,518 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:52:23,520 - agent_service - INFO - RESP GET /health status=200 latency=2.0ms
+2026-03-14 01:52:33,533 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:52:33,535 - agent_service - INFO - RESP GET /health status=200 latency=2.1ms
+2026-03-14 01:52:38,755 - httpx - INFO - HTTP Request: POST http://localhost:8502/apply_config "HTTP/1.1 200 OK"
+2026-03-14 01:52:38,757 - agent_service - INFO - CARLA accepted configuration
+2026-03-14 01:52:38,758 - agent_service - INFO - CARLA response for sim_06610e98: status=success
+2026-03-14 01:52:38,759 - agent_service - INFO - RESP POST /apply_config status=200 latency=18962.1ms
+2026-03-14 01:52:43,423 - agent_service - INFO - REQ  GET /health client=172.226.3.251
+2026-03-14 01:52:43,425 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 01:52:53,509 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:52:53,510 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 01:53:03,543 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:53:03,545 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 01:53:13,584 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:53:13,586 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 01:53:23,566 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:53:23,568 - agent_service - INFO - RESP GET /health status=200 latency=2.1ms
+2026-03-14 01:53:33,577 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:53:33,579 - agent_service - INFO - RESP GET /health status=200 latency=1.4ms
+2026-03-14 01:53:43,561 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:53:43,562 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 01:53:53,567 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:53:53,568 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 01:54:03,565 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:54:03,569 - agent_service - INFO - RESP GET /health status=200 latency=4.6ms
+2026-03-14 01:54:13,658 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:54:13,660 - agent_service - INFO - RESP GET /health status=200 latency=1.9ms
+2026-03-14 01:54:23,665 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:54:23,667 - agent_service - INFO - RESP GET /health status=200 latency=1.8ms
+2026-03-14 01:54:33,756 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:54:33,758 - agent_service - INFO - RESP GET /health status=200 latency=2.0ms
+2026-03-14 01:54:43,883 - agent_service - INFO - REQ  GET /health client=172.226.3.250
+2026-03-14 01:54:43,895 - agent_service - INFO - RESP GET /health status=200 latency=12.2ms
