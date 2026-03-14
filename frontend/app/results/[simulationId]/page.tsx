@@ -2,10 +2,10 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import MapVisualization from '../../_components/map_visualization';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Car,
@@ -18,9 +18,6 @@ import {
   RotateCcw,
   AlertCircle,
   LayoutDashboard,
-  ArrowLeft,
-  Clock,
-  Zap,
 } from 'lucide-react';
 
 // -- Types --
@@ -45,8 +42,8 @@ function MetricCard({ icon, bg, label, value }: MetricCardProps) {
       <div className="flex items-center gap-3">
         <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${bg}`}>{icon}</div>
         <div>
-          <p className="text-muted-foreground text-sm">{label}</p>
-          <p className="text-card-foreground text-2xl font-bold">{value}</p>
+          <p className="text-sm text-muted-foreground">{label}</p>
+          <p className="text-2xl font-bold text-card-foreground">{value}</p>
         </div>
       </div>
     </Card>
@@ -83,7 +80,6 @@ export default function ResultsPage() {
   const params = useParams<{ simulationId?: string }>();
   const router = useRouter();
   const [simData, setSimData] = useState<SimulationData | null>(null);
-  const [snapshot, setSnapshot] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Live dashboard state
@@ -114,51 +110,23 @@ export default function ResultsPage() {
     setLoading(false);
   }, []);
 
-  // Fetch snapshot for overview tab
-  useEffect(() => {
-    if (!simData) return;
-
-    const fetchSnapshot = async () => {
-      try {
-        const response = await fetch(`${API_URL_SIM}/snapshot`);
-        const data = await response.json();
-        setSnapshot(data.snapshot);
-      } catch {
-        // Snapshot service not available
-      }
-    };
-
-    fetchSnapshot();
-    const interval = setInterval(fetchSnapshot, 5000);
-    return () => clearInterval(interval);
-  }, [simData, API_URL_SIM]);
-
   // WebSocket for live dashboard
   useEffect(() => {
     if (!isLive) return;
-
     const connectWebSocket = () => {
       try {
         const ws = new WebSocket(WS_URL);
         wsRef.current = ws;
-
-        ws.onopen = () => {
-          setConnectionError(false);
-        };
-
+        ws.onopen = () => setConnectionError(false);
         ws.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
-            if (data !== 'ping' && typeof data === 'object') {
-              setLiveSnapshot(data);
-            }
+            if (data !== 'ping' && typeof data === 'object') setLiveSnapshot(data);
           } catch {
             // ignore parse errors
           }
         };
-
         ws.onerror = () => setConnectionError(true);
-
         ws.onclose = () => {
           setConnectionError(true);
           reconnectTimeoutRef.current = setTimeout(connectWebSocket, 5000);
@@ -167,9 +135,7 @@ export default function ResultsPage() {
         setConnectionError(true);
       }
     };
-
     connectWebSocket();
-
     return () => {
       wsRef.current?.close();
       if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
@@ -179,7 +145,6 @@ export default function ResultsPage() {
   // Camera feed for selected vehicle
   useEffect(() => {
     if (!selectedVehicle) return;
-
     const fetchCamera = async () => {
       try {
         const res = await fetch(`${API_URL_SIM}/snapshot/camera/${selectedVehicle.id}/front_view`);
@@ -188,7 +153,6 @@ export default function ResultsPage() {
         // camera not available
       }
     };
-
     fetchCamera();
     const interval = setInterval(fetchCamera, 1000);
     return () => clearInterval(interval);
@@ -203,97 +167,24 @@ export default function ResultsPage() {
   const simulationId = params?.simulationId || simData?.simulation_id || 'unknown';
   const config = simData?.config || {};
   const modelName = simData?.model_name || 'unknown';
-  const modelColor = MODEL_COLORS[modelName] || '#6b7280';
+  const modelColor = MODEL_COLORS[modelName] || 'hsl(var(--muted-foreground))';
   const metrics = liveSnapshot?.metrics || {};
   const vehicles = liveSnapshot?.vehicles || [];
-  const pedestrians = liveSnapshot?.pedestrians || [];
-  const trafficLights = liveSnapshot?.traffic_lights || [];
 
   if (loading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: '#111116' }}
-      >
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-600 border-t-gray-300" />
-          <span style={{ color: '#9ca3af' }}>Loading simulation...</span>
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-muted border-t-foreground" />
+          <span className="text-muted-foreground">Loading simulation...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#111116', color: '#e5e7eb' }}>
-      {/* Header */}
-      <header
-        className="flex items-center justify-between px-6 py-3"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-      >
-        <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
-            <Car size={20} style={{ color: '#9ca3af' }} />
-            <span
-              className="text-sm font-semibold tracking-wide"
-              style={{ color: '#d1d5db', letterSpacing: '0.04em' }}
-            >
-              MetisCity
-            </span>
-          </Link>
-          <span style={{ color: '#374151' }}>/</span>
-          <span className="text-xs" style={{ color: '#6b7280' }}>
-            {simulationId}
-          </span>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => router.push('/')} className="gap-2">
-          <ArrowLeft size={14} />
-          Back to Chat
-        </Button>
-      </header>
-
+    <div className="min-h-full bg-background text-foreground">
       <div className="mx-auto max-w-7xl p-6">
-        {/* Config summary bar */}
-        <div
-          className="mb-6 overflow-hidden rounded-xl"
-          style={{
-            background: '#0d1117',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}
-        >
-          <div
-            className="flex items-center justify-between px-4 py-3"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-2.5 w-2.5 rounded-full" style={{ background: modelColor }} />
-              <span className="text-sm font-semibold" style={{ color: modelColor }}>
-                {modelName}
-              </span>
-              <span
-                className="rounded-full px-2 py-0.5 text-xs"
-                style={{
-                  background:
-                    simData?.simulator_status === 'success'
-                      ? 'rgba(34,197,94,0.1)'
-                      : 'rgba(234,179,8,0.1)',
-                  color: simData?.simulator_status === 'success' ? '#4ade80' : '#facc15',
-                }}
-              >
-                {simData?.simulator_status === 'success'
-                  ? 'Applied to CARLA'
-                  : simData?.simulator_status || 'pending'}
-              </span>
-            </div>
-          </div>
-          <pre
-            className="overflow-x-auto p-4 text-xs leading-relaxed"
-            style={{
-              fontFamily: "var(--font-geist-mono, 'Geist Mono', monospace)",
-            }}
-            dangerouslySetInnerHTML={{ __html: syntaxHighlight(config) }}
-          />
-        </div>
-
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="mb-6 w-full justify-start">
             <TabsTrigger value="overview" className="gap-2">
@@ -315,11 +206,11 @@ export default function ResultsPage() {
             <div className="grid grid-cols-2 gap-6">
               {/* Simulation Panel */}
               <Card className="p-6">
-                <h2 className="text-card-foreground mb-4 text-xl font-semibold">Simulation</h2>
+                <h2 className="mb-4 text-xl font-semibold text-card-foreground">Simulation</h2>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">ID:</span>
-                    <span className="text-card-foreground font-mono">{simulationId}</span>
+                    <span className="font-mono text-card-foreground">{simulationId}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Model:</span>
@@ -327,15 +218,13 @@ export default function ResultsPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Status:</span>
-                    <span className="bg-chart-4/20 text-chart-4 rounded px-2 py-1 text-sm">
+                    <Badge variant="secondary">
                       {simData?.simulator_status === 'success' ? 'Running' : 'Pending'}
-                    </span>
+                    </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Weather:</span>
-                    <span className="text-card-foreground">
-                      {(config.weather as string) || 'N/A'}
-                    </span>
+                    <span className="text-card-foreground">{(config.weather as string) || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Map:</span>
@@ -344,37 +233,54 @@ export default function ResultsPage() {
                 </div>
               </Card>
 
-              {/* Snapshot Panel */}
-              <Card className="p-6">
-                <h2 className="text-card-foreground mb-4 text-xl font-semibold">Snapshot</h2>
-                {snapshot ? (
-                  <img src={snapshot} alt="Simulation snapshot" className="w-full rounded-lg" />
-                ) : (
-                  <div className="text-muted-foreground flex h-48 items-center justify-center text-center text-sm">
-                    No snapshot available. The CARLA snapshot service may not be running.
+              {/* Config JSON Panel */}
+              <Card className="overflow-hidden">
+                <div className="flex items-center justify-between border-b px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full" style={{ background: modelColor }} />
+                    <h2 className="text-sm font-semibold" style={{ color: modelColor }}>
+                      {modelName}
+                    </h2>
                   </div>
-                )}
+                  <Badge
+                    variant="outline"
+                    className={
+                      simData?.simulator_status === 'success'
+                        ? 'border-green-500/30 bg-green-500/10 text-green-400'
+                        : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400'
+                    }
+                  >
+                    {simData?.simulator_status === 'success'
+                      ? 'Applied to CARLA'
+                      : simData?.simulator_status || 'pending'}
+                  </Badge>
+                </div>
+                <pre
+                  className="overflow-x-auto bg-muted/40 p-4 text-xs leading-relaxed"
+                  style={{ fontFamily: "var(--font-geist-mono, 'Geist Mono', monospace)" }}
+                  dangerouslySetInnerHTML={{ __html: syntaxHighlight(config) }}
+                />
               </Card>
 
               {/* Config Panel */}
               <Card className="p-6">
-                <h2 className="text-card-foreground mb-4 text-xl font-semibold">Configuration</h2>
+                <h2 className="mb-4 text-xl font-semibold text-card-foreground">Configuration</h2>
                 <div className="space-y-3">
                   <div>
-                    <div className="text-muted-foreground text-sm">Vehicles</div>
-                    <div className="text-card-foreground text-2xl font-bold">
+                    <div className="text-sm text-muted-foreground">Vehicles</div>
+                    <div className="text-2xl font-bold text-card-foreground">
                       {(config.number_of_vehicles as number) ?? 'N/A'}
                     </div>
                   </div>
                   <div>
-                    <div className="text-muted-foreground text-sm">Pedestrians</div>
-                    <div className="text-card-foreground text-2xl font-bold">
+                    <div className="text-sm text-muted-foreground">Pedestrians</div>
+                    <div className="text-2xl font-bold text-card-foreground">
                       {(config.number_of_pedestrians as number) ?? 'N/A'}
                     </div>
                   </div>
                   <div>
-                    <div className="text-muted-foreground text-sm">Visibility</div>
-                    <div className="text-card-foreground text-2xl font-bold">
+                    <div className="text-sm text-muted-foreground">Visibility</div>
+                    <div className="text-2xl font-bold text-card-foreground">
                       {config.visibility != null ? `${config.visibility}%` : 'N/A'}
                     </div>
                   </div>
@@ -383,30 +289,30 @@ export default function ResultsPage() {
 
               {/* Metrics Panel */}
               <Card className="p-6">
-                <h2 className="text-card-foreground mb-4 text-xl font-semibold">Live Metrics</h2>
+                <h2 className="mb-4 text-xl font-semibold text-card-foreground">Live Metrics</h2>
                 {Object.keys(metrics).length > 0 ? (
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Avg Speed:</span>
-                      <span className="text-card-foreground font-semibold">
+                      <span className="font-semibold text-card-foreground">
                         {metrics.average_speed_kmh?.toFixed(0) || 0} km/h
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Collisions:</span>
-                      <span className="text-card-foreground font-semibold">
+                      <span className="font-semibold text-card-foreground">
                         {metrics.total_collisions || 0}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Traffic Density:</span>
-                      <span className="text-card-foreground font-semibold">
+                      <span className="font-semibold text-card-foreground">
                         {metrics.traffic_density?.toFixed(2) || 0}
                       </span>
                     </div>
                   </div>
                 ) : (
-                  <div className="text-muted-foreground flex h-32 items-center justify-center text-center text-sm">
+                  <div className="flex h-32 items-center justify-center text-center text-sm text-muted-foreground">
                     Waiting for live data from CARLA...
                   </div>
                 )}
@@ -417,9 +323,9 @@ export default function ResultsPage() {
           {/* Real-time Map Tab */}
           <TabsContent value="map">
             <Card className="overflow-hidden">
-              <div className="border-border border-b p-4">
-                <h2 className="text-card-foreground text-xl font-semibold">Real-time Map</h2>
-                <p className="text-muted-foreground mt-1 text-sm">
+              <div className="border-b p-4">
+                <h2 className="text-xl font-semibold text-card-foreground">Real-time Map</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
                   Live visualization of vehicles, roads, and traffic lights
                 </p>
               </div>
@@ -436,17 +342,15 @@ export default function ResultsPage() {
                 <div className="space-y-4 text-center">
                   {connectionError ? (
                     <>
-                      <AlertCircle className="text-chart-1 mx-auto h-16 w-16" />
-                      <p className="text-muted-foreground">
-                        Unable to connect to simulation service
-                      </p>
-                      <p className="text-muted-foreground/60 text-sm">
+                      <AlertCircle className="mx-auto h-16 w-16 text-destructive" />
+                      <p className="text-muted-foreground">Unable to connect to simulation service</p>
+                      <p className="text-sm text-muted-foreground/60">
                         Make sure the snapshot service is running at {NODE_IP}:{SNAPSHOT_PORT}
                       </p>
                     </>
                   ) : (
                     <>
-                      <div className="border-chart-1 mx-auto h-16 w-16 animate-spin rounded-full border-4 border-t-transparent" />
+                      <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-muted border-t-foreground" />
                       <p className="text-muted-foreground">Connecting to simulation...</p>
                     </>
                   )}
@@ -457,11 +361,7 @@ export default function ResultsPage() {
                 {/* Control Bar */}
                 <Card className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-4">
-                    <Button
-                      onClick={toggleLive}
-                      variant={isLive ? 'default' : 'outline'}
-                      className="gap-2"
-                    >
+                    <Button onClick={toggleLive} variant={isLive ? 'default' : 'outline'} className="gap-2">
                       {isLive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       {isLive ? 'Pause' : 'Resume'}
                     </Button>
@@ -470,13 +370,13 @@ export default function ResultsPage() {
                       Reset View
                     </Button>
                     {connectionError && (
-                      <div className="text-chart-1 flex items-center gap-2 text-sm">
+                      <div className="flex items-center gap-2 text-sm text-destructive">
                         <AlertCircle className="h-4 w-4" />
                         Connection lost - retrying...
                       </div>
                     )}
                   </div>
-                  <div className="text-muted-foreground text-sm">
+                  <div className="text-sm text-muted-foreground">
                     Last updated:{' '}
                     {liveSnapshot.timestamp
                       ? new Date(liveSnapshot.timestamp * 1000).toLocaleTimeString()
@@ -487,19 +387,19 @@ export default function ResultsPage() {
                 {/* Metrics Overview */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                   <MetricCard
-                    icon={<Car className="text-chart-2 h-5 w-5" />}
+                    icon={<Car className="h-5 w-5 text-chart-2" />}
                     bg="bg-chart-2/20"
                     label="Vehicles"
                     value={metrics.total_vehicles || 0}
                   />
                   <MetricCard
-                    icon={<Users className="text-chart-4 h-5 w-5" />}
+                    icon={<Users className="h-5 w-5 text-chart-4" />}
                     bg="bg-chart-4/20"
                     label="Pedestrians"
                     value={metrics.total_pedestrians || 0}
                   />
                   <MetricCard
-                    icon={<Activity className="text-chart-3 h-5 w-5" />}
+                    icon={<Activity className="h-5 w-5 text-chart-3" />}
                     bg="bg-chart-3/20"
                     label="Avg Speed"
                     value={
@@ -509,7 +409,7 @@ export default function ResultsPage() {
                     }
                   />
                   <MetricCard
-                    icon={<Activity className="text-destructive h-5 w-5" />}
+                    icon={<Activity className="h-5 w-5 text-destructive" />}
                     bg="bg-destructive/20"
                     label="Collisions"
                     value={metrics.total_collisions || 0}
@@ -524,21 +424,21 @@ export default function ResultsPage() {
                         key={v.id}
                         onClick={() => setSelectedVehicle(v)}
                         className={`cursor-pointer p-4 transition hover:shadow-md ${
-                          selectedVehicle?.id === v.id ? 'ring-chart-1 ring-2' : ''
+                          selectedVehicle?.id === v.id ? 'ring-2 ring-ring' : ''
                         }`}
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-card-foreground font-semibold">Vehicle #{v.id}</p>
-                            <p className="text-muted-foreground text-xs">
+                            <p className="font-semibold text-card-foreground">Vehicle #{v.id}</p>
+                            <p className="text-xs text-muted-foreground">
                               {v.type?.split('.').pop() || 'Unknown'}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-card-foreground text-lg font-bold">
+                            <p className="text-lg font-bold text-card-foreground">
                               {v.velocity?.speed_kmh?.toFixed(0) || 0}
                             </p>
-                            <p className="text-muted-foreground text-xs">km/h</p>
+                            <p className="text-xs text-muted-foreground">km/h</p>
                           </div>
                         </div>
                       </Card>
@@ -551,10 +451,10 @@ export default function ResultsPage() {
                   <Card className="p-6">
                     <div className="mb-4 flex items-center justify-between">
                       <div>
-                        <p className="text-card-foreground text-xl font-semibold">
+                        <p className="text-xl font-semibold text-card-foreground">
                           Vehicle #{selectedVehicle.id}
                         </p>
-                        <p className="text-muted-foreground text-sm">{selectedVehicle.type}</p>
+                        <p className="text-sm text-muted-foreground">{selectedVehicle.type}</p>
                       </div>
                       <Button size="sm" variant="outline" onClick={() => setSelectedVehicle(null)}>
                         Close
@@ -562,29 +462,29 @@ export default function ResultsPage() {
                     </div>
                     <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
                       <div>
-                        <p className="text-muted-foreground text-sm">Speed</p>
-                        <p className="text-card-foreground text-lg font-bold">
+                        <p className="text-sm text-muted-foreground">Speed</p>
+                        <p className="text-lg font-bold text-card-foreground">
                           {selectedVehicle.velocity?.speed_kmh?.toFixed(1) || 0} km/h
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground text-sm">Distance</p>
-                        <p className="text-card-foreground text-lg font-bold">
+                        <p className="text-sm text-muted-foreground">Distance</p>
+                        <p className="text-lg font-bold text-card-foreground">
                           {selectedVehicle.distance_traveled?.toFixed(0) || 0} m
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground text-sm">Position</p>
-                        <p className="text-card-foreground text-sm font-medium">
+                        <p className="text-sm text-muted-foreground">Position</p>
+                        <p className="text-sm font-medium text-card-foreground">
                           x: {selectedVehicle.position?.x?.toFixed(0) || 0}
                         </p>
-                        <p className="text-card-foreground text-sm font-medium">
+                        <p className="text-sm font-medium text-card-foreground">
                           y: {selectedVehicle.position?.y?.toFixed(0) || 0}
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground text-sm">Heading</p>
-                        <p className="text-card-foreground text-lg font-bold">
+                        <p className="text-sm text-muted-foreground">Heading</p>
+                        <p className="text-lg font-bold text-card-foreground">
                           {selectedVehicle.rotation?.yaw?.toFixed(0) || 0}deg
                         </p>
                       </div>
@@ -597,7 +497,7 @@ export default function ResultsPage() {
                           alt="Camera View"
                           className="w-full max-w-2xl rounded-lg shadow-md"
                         />
-                        <p className="text-muted-foreground mt-2 text-xs">
+                        <p className="mt-2 text-xs text-muted-foreground">
                           Camera: {cameraFeed.type} |{' '}
                           {cameraFeed.timestamp
                             ? new Date(cameraFeed.timestamp * 1000).toLocaleTimeString()
@@ -605,7 +505,7 @@ export default function ResultsPage() {
                         </p>
                       </div>
                     ) : (
-                      <div className="bg-muted text-muted-foreground rounded-lg py-10 text-center">
+                      <div className="rounded-lg bg-muted py-10 text-center text-muted-foreground">
                         <Camera className="mx-auto mb-2 h-8 w-8 opacity-50" />
                         <p>Loading camera feed...</p>
                       </div>
