@@ -39,7 +39,7 @@ A user submits a scenario description (e.g., *"heavy rain downtown, 20 vehicles,
 
 A live deployment of PromptCarla is accessible at:
 
-[Live Demo](http://128.105.144.61:3000)
+[Live Demo](http://128.105.144.57:3000)
 
 ---
 
